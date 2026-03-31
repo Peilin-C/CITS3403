@@ -1,0 +1,197 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Browse Users</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f3f5fb;
+      font-family: Arial, sans-serif;
+      margin: 0;
+    }
+
+    .navbar {
+      background-color: #0d6efd;
+      padding: 14px 32px;
+    }
+
+    .navbar-brand,
+    .nav-link {
+      color: white !important;
+      font-weight: 500;
+      text-decoration: none;
+    }
+
+    .navbar-brand {
+      font-size: 1.4rem;
+      font-weight: 700;
+    }
+
+    .page-title {
+      font-size: 3rem;
+      font-weight: 700;
+      text-align: center;
+      margin-top: 40px;
+      margin-bottom: 10px;
+      color: #212529;
+    }
+
+    .page-subtitle {
+      text-align: center;
+      color: #6c757d;
+      margin-bottom: 30px;
+      font-size: 1.1rem;
+    }
+
+    .filter-box {
+      max-width: 1100px;
+      margin: 0 auto 35px auto;
+    }
+
+    .user-card {
+      background: white;
+      border-radius: 22px;
+      padding: 24px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+      height: 100%;
+    }
+
+    .user-card h4 {
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: #212529;
+    }
+
+    .user-card p {
+      margin-bottom: 12px;
+      color: #343a40;
+      font-size: 1rem;
+    }
+
+    .badge-project {
+      background-color: #d1fae5;
+      color: #065f46;
+      font-size: 0.85rem;
+      padding: 8px 14px;
+      border-radius: 12px;
+      display: inline-block;
+      margin-bottom: 16px;
+      font-weight: 500;
+    }
+
+    .btn-profile {
+      width: 100%;
+      border-radius: 12px;
+      padding: 10px;
+      font-weight: 600;
+      margin-top: 8px;
+    }
+
+    .cards-wrapper {
+      max-width: 1100px;
+      margin: 0 auto 50px auto;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg">
+    <div class="container-fluid px-0">
+      <a class="navbar-brand" href="#">Study Buddy</a>
+      <div class="ms-auto d-flex gap-4">
+        <a class="nav-link" href="#">Sessions</a>
+        <a class="nav-link" href="#">Create Session</a>
+        <a class="nav-link" href="#">Profile</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container py-4">
+    <h1 class="page-title">Find Study Buddies</h1>
+    <p class="page-subtitle">Browse students by units, availability, and study preferences</p>
+
+    <div class="filter-box row g-3">
+      <div class="col-md-6">
+        <input type="text" class="form-control form-control-lg" placeholder="Search by unit (e.g. CITS3403)">
+      </div>
+      <div class="col-md-6">
+        <select class="form-select form-select-lg">
+          <option>All Availability</option>
+          <option>Morning</option>
+          <option>Afternoon</option>
+          <option>Evening</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="cards-wrapper row g-4">
+      <div class="col-md-4">
+        <div class="user-card">
+          <span class="badge-project">Open to Team Project</span>
+          <h4>Aisha Khan</h4>
+          <p><strong>Units:</strong> CITS3403, CITS3002</p>
+          <p><strong>Availability:</strong> Tue/Thu afternoons</p>
+          <p><strong>Study Style:</strong> Group study</p>
+          <button class="btn btn-primary btn-profile">View Profile</button>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="user-card">
+          <h4>Daniel Lee</h4>
+          <p><strong>Units:</strong> CITS5505</p>
+          <p><strong>Availability:</strong> Weekends</p>
+          <p><strong>Study Style:</strong> Quiet study</p>
+          <button class="btn btn-primary btn-profile">View Profile</button>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="user-card">
+          <span class="badge-project">Open to Team Project</span>
+          <h4>Mia Chen</h4>
+          <p><strong>Units:</strong> CITS3403</p>
+          <p><strong>Availability:</strong> Mon evenings</p>
+          <p><strong>Study Style:</strong> Online study</p>
+          <button class="btn btn-primary btn-profile">View Profile</button>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="user-card">
+          <span class="badge-project">Open to Team Project</span>
+          <h4>Ryan Patel</h4>
+          <p><strong>Units:</strong> CITS3001</p>
+          <p><strong>Availability:</strong> Morning sessions</p>
+          <p><strong>Study Style:</strong> Group study</p>
+          <button class="btn btn-primary btn-profile">View Profile</button>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="user-card">
+          <h4>Sophia Nguyen</h4>
+          <p><strong>Units:</strong> CITS3403</p>
+          <p><strong>Availability:</strong> Weekday evenings</p>
+          <p><strong>Study Style:</strong> Online study</p>
+          <button class="btn btn-primary btn-profile">View Profile</button>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="user-card">
+          <span class="badge-project">Open to Team Project</span>
+          <h4>Arjun Mehta</h4>
+          <p><strong>Units:</strong> CITS2200, CITS2005</p>
+          <p><strong>Availability:</strong> Fri afternoons</p>
+          <p><strong>Study Style:</strong> In-person study</p>
+          <button class="btn btn-primary btn-profile">View Profile</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
