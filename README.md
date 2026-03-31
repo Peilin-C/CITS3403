@@ -1,1 +1,27 @@
-hey! its peilin
+# Study Buddy Finder
+
+## Project Idea
+
+Study Buddy Finder is a web application that helps university students connect with others for studying and group assignments.
+
+Users can create a profile with their units, availability, and study preferences, then browse and connect with other students. The app also supports finding project teammates by allowing users to indicate if they are open to group work.
+
+---
+
+## Team Members
+
+* Bhavya Narula
+* Fatima Sher
+* Peilin Cai
+* Saffron Coupland
+
+---
+
+## Key Features (Planned)
+
+* User signup and login
+* User profiles (units, availability, preferences)
+* Browse and search for study buddies
+* Option to find project teammates
+* Create and join study sessions
+
