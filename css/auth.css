@@ -1,0 +1,168 @@
+/* ── Reset & Base ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --primary:      #4f46e5;
+  --primary-h:    #4338ca;
+  --danger:       #dc2626;
+  --success:      #16a34a;
+  --warn-bg:      #fef2f2;
+  --ok-bg:        #f0fdf4;
+  --border:       #d1d5db;
+  --border-focus: #4f46e5;
+  --text:         #111827;
+  --muted:        #6b7280;
+  --bg:           #f9fafb;
+  --card:         #ffffff;
+  --radius:       10px;
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ── Top Nav ── */
+nav {
+  width: 100%;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav-brand { font-weight: 700; font-size: 1.1rem; color: var(--primary); }
+.nav-right  { display: flex; align-items: center; gap: 1rem; }
+#nav-user   { font-size: .875rem; color: var(--muted); }
+
+/* ── Card ── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem 2.5rem;
+  width: 100%; max-width: 420px;
+  margin-top: 2rem;
+  box-shadow: 0 1px 6px rgba(0,0,0,.07);
+}
+.card h2       { font-size: 1.4rem; margin-bottom: .25rem; }
+.card p.sub    { font-size: .875rem; color: var(--muted); margin-bottom: 1.5rem; }
+
+/* ── Form ── */
+.form-group { margin-bottom: 1.1rem; }
+label { display: block; font-size: .875rem; font-weight: 500; margin-bottom: .4rem; }
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: .6rem .85rem;
+  border: 1.5px solid var(--border);
+  border-radius: 7px;
+  font-size: .95rem;
+  transition: border-color .2s, box-shadow .2s;
+  outline: none;
+  background: #fff;
+}
+input:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(79,70,229,.15);
+}
+
+/* ── Validation States ── */
+input.error   { border-color: var(--danger); }
+input.success { border-color: var(--success); }
+input.error:focus   { box-shadow: 0 0 0 3px rgba(220,38,38,.15); }
+input.success:focus { box-shadow: 0 0 0 3px rgba(22,163,74,.15); }
+
+.field-msg {
+  font-size: .8rem;
+  margin-top: .35rem;
+  display: none;
+}
+.field-msg.error   { display: block; color: var(--danger); }
+.field-msg.success { display: block; color: var(--success); }
+
+/* ── Alert Banners ── */
+.alert {
+  display: none;
+  border-radius: 7px;
+  padding: .75rem 1rem;
+  font-size: .875rem;
+  margin-bottom: 1.2rem;
+  border: 1px solid transparent;
+}
+.alert.error {
+  display: block;
+  background: var(--warn-bg);
+  border-color: #fca5a5;
+  color: var(--danger);
+}
+.alert.success {
+  display: block;
+  background: var(--ok-bg);
+  border-color: #86efac;
+  color: var(--success);
+}
+
+/* ── Buttons ── */
+.btn-primary {
+  width: 100%;
+  padding: .7rem;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .2s, transform .1s;
+  margin-top: .25rem;
+}
+.btn-primary:hover  { background: var(--primary-h); }
+.btn-primary:active { transform: scale(.98); }
+
+.btn-logout {
+  padding: .4rem 1rem;
+  background: transparent;
+  color: var(--danger);
+  border: 1.5px solid var(--danger);
+  border-radius: 7px;
+  font-size: .875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .2s;
+}
+.btn-logout:hover { background: var(--danger); color: #fff; }
+
+/* ── Switch Link ── */
+.switch-link {
+  text-align: center;
+  margin-top: 1.2rem;
+  font-size: .875rem;
+  color: var(--muted);
+}
+.switch-link a { color: var(--primary); text-decoration: none; font-weight: 500; }
+.switch-link a:hover { text-decoration: underline; }
+
+/* ── Password Strength Bar ── */
+.strength-bar-wrap { margin-top: .4rem; display: none; }
+.strength-bar-wrap.visible { display: block; }
+.strength-track {
+  height: 4px; border-radius: 4px;
+  background: var(--border);
+  overflow: hidden;
+}
+.strength-fill {
+  height: 100%; width: 0;
+  border-radius: 4px;
+  transition: width .3s, background .3s;
+}
+.strength-label { font-size: .75rem; margin-top: .3rem; color: var(--muted); }

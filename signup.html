@@ -1,0 +1,186 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Study Buddy Finder — Sign Up</title>
+  <link rel="stylesheet" href="css/auth.css" />
+</head>
+<body>
+
+  <!-- ── Navigation ── -->
+  <nav>
+    <span class="nav-brand">📚 Study Buddy Finder</span>
+  </nav>
+
+  <!-- ── Signup Card ── -->
+  <div class="card">
+    <h2>Create account</h2>
+    <p class="sub">Join CourseHub to start enrolling</p>
+
+    <!-- Alert banner: error or success messages appear here -->
+    <div class="alert" id="signup-alert"></div>
+
+    <div class="form-group">
+      <label for="signup-name">Full Name</label>
+      <input type="text" id="signup-name" placeholder="Jane Smith"
+             oninput="clearFieldError(this)" />
+      <div class="field-msg" id="signup-name-msg"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="signup-id">Student ID</label>
+      <input type="text" id="signup-id" placeholder="e.g. s1234567"
+             oninput="clearFieldError(this)" />
+      <div class="field-msg" id="signup-id-msg"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="signup-email">University Email</label>
+      <input type="email" id="signup-email" placeholder="you@university.edu"
+             oninput="clearFieldError(this)" />
+      <div class="field-msg" id="signup-email-msg"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="signup-password">Password</label>
+      <input type="password" id="signup-password" placeholder="Min. 8 characters"
+             oninput="onPasswordInput(this)" />
+      <!-- Password strength indicator -->
+      <div class="strength-bar-wrap" id="strength-wrap">
+        <div class="strength-track">
+          <div class="strength-fill" id="strength-fill"></div>
+        </div>
+        <div class="strength-label" id="strength-label"></div>
+      </div>
+      <div class="field-msg" id="signup-password-msg"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="signup-confirm">Confirm Password</label>
+      <input type="password" id="signup-confirm" placeholder="Repeat password"
+             oninput="clearFieldError(this)" />
+      <div class="field-msg" id="signup-confirm-msg"></div>
+    </div>
+
+    <button class="btn-primary" onclick="doSignup()">Create Account</button>
+
+    <div class="switch-link">
+      Already have an account? <a href="index.html">Log in</a>
+    </div>
+  </div>
+
+  <script>
+    function doSignup() {
+      clearAlert('signup-alert');
+      const nameEl    = document.getElementById('signup-name');
+      const idEl      = document.getElementById('signup-id');
+      const emailEl   = document.getElementById('signup-email');
+      const passEl    = document.getElementById('signup-password');
+      const confirmEl = document.getElementById('signup-confirm');
+      let ok = true;
+
+      // Validate full name
+      if (!nameEl.value.trim()) {
+        setFieldError(nameEl, 'signup-name-msg', 'Full name is required');
+        ok = false;
+      } else { setFieldOk(nameEl, 'signup-name-msg'); }
+
+      // Validate student ID (format: s + 7 digits)
+      if (!/^s\d{7}$/i.test(idEl.value.trim())) {
+        setFieldError(idEl, 'signup-id-msg', 'Student ID must be s followed by 7 digits');
+        ok = false;
+      } else { setFieldOk(idEl, 'signup-id-msg'); }
+
+      // Validate email
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailEl.value)) {
+        setFieldError(emailEl, 'signup-email-msg', 'Enter a valid email address');
+        ok = false;
+      } else { setFieldOk(emailEl, 'signup-email-msg'); }
+
+      // Validate password strength
+      if (passEl.value.length < 8) {
+        setFieldError(passEl, 'signup-password-msg', 'Password must be at least 8 characters');
+        ok = false;
+      } else if (getStrength(passEl.value) < 2) {
+        setFieldError(passEl, 'signup-password-msg', 'Password is too weak — add numbers or symbols');
+        ok = false;
+      } else { setFieldOk(passEl, 'signup-password-msg'); }
+
+      // Validate password confirmation
+      if (confirmEl.value !== passEl.value) {
+        setFieldError(confirmEl, 'signup-confirm-msg', 'Passwords do not match');
+        ok = false;
+      } else if (confirmEl.value) { setFieldOk(confirmEl, 'signup-confirm-msg'); }
+
+      if (!ok) {
+        showAlert('signup-alert', 'error', 'Please fix the errors above before continuing.');
+        return;
+      }
+
+      // TODO: send data to backend API
+      showAlert('signup-alert', 'success', '✅ Account created! Redirecting to login...');
+      setTimeout(() => { window.location.href = 'index.html'; }, 1500);
+    }
+
+    // ── Password strength ──────────────────────────────
+    function getStrength(pw) {
+      let score = 0;
+      if (pw.length >= 8)          score++;
+      if (pw.length >= 12)         score++;
+      if (/[A-Z]/.test(pw))        score++;
+      if (/[0-9]/.test(pw))        score++;
+      if (/[^A-Za-z0-9]/.test(pw)) score++;
+      return score;
+    }
+    const strengthColors = ['#dc2626','#f97316','#facc15','#84cc16','#16a34a'];
+    const strengthLabels = ['Very weak','Weak','Fair','Good','Strong'];
+
+    function onPasswordInput(el) {
+      clearFieldError(el);
+      const pw   = el.value;
+      const wrap = document.getElementById('strength-wrap');
+      if (!pw) { wrap.classList.remove('visible'); return; }
+      wrap.classList.add('visible');
+      const score = Math.max(0, getStrength(pw) - 1);
+      document.getElementById('strength-fill').style.width      = ((score + 1) / 5 * 100) + '%';
+      document.getElementById('strength-fill').style.background = strengthColors[score];
+      document.getElementById('strength-label').textContent     = strengthLabels[score];
+    }
+
+    // ── Shared helpers ──────────────────────────────────
+    function showAlert(id, type, msg) {
+      const el = document.getElementById(id);
+      el.className = 'alert ' + type;
+      el.textContent = msg;
+    }
+    function clearAlert(id) {
+      const el = document.getElementById(id);
+      el.className = 'alert';
+      el.textContent = '';
+    }
+    function setFieldError(inputEl, msgId, msg) {
+      inputEl.className = 'error';
+      const m = document.getElementById(msgId);
+      m.className = 'field-msg error';
+      m.textContent = '⚠ ' + msg;
+    }
+    function setFieldOk(inputEl, msgId) {
+      inputEl.className = 'success';
+      const m = document.getElementById(msgId);
+      m.className = 'field-msg success';
+      m.textContent = '✓ Looks good';
+    }
+    function clearFieldError(inputEl) {
+      inputEl.className = '';
+      const msgEl = inputEl.nextElementSibling;
+      if (msgEl && msgEl.classList.contains('field-msg')) {
+        msgEl.className = 'field-msg';
+        msgEl.textContent = '';
+      }
+    }
+  </script>
+
+</body>
+</html>
