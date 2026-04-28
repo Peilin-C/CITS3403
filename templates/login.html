@@ -1,1 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Log In — Study Buddy{% endblock %}
 
+{% block extra_css %}
+<style>
+  .auth-card { max-width: 420px; width: 100%; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-start justify-content-center pt-5 pb-5">
+  <div class="card shadow-sm border auth-card">
+    <div class="card-body p-4">
+      <h2 class="card-title h4 mb-1">Welcome back</h2>
+      <p class="text-muted small mb-4">Log in to access your study groups</p>
+
+      <!-- Alert banner (JS-driven, before Flask integration) -->
+      <div id="login-alert" class="alert d-none" role="alert"></div>
+
+      <form method="POST" action="{{ url_for('login') }}" id="login-form" novalidate>
+        <!-- CSRF token (uncomment when Flask-WTF is set up) -->
+        <!-- {{ form.hidden_tag() }} -->
+
+        <!-- Email -->
+        <div class="mb-3">
+          <label for="login-email" class="form-label">Student Email</label>
+          <input type="email" class="form-control" id="login-email" name="email"
+                 placeholder="you@university.edu" required />
+          <div class="invalid-feedback">Please enter a valid email address.</div>
+        </div>
+
+        <!-- Password -->
+        <div class="mb-3">
+          <label for="login-password" class="form-label">Password</label>
+          <input type="password" class="form-control" id="login-password" name="password"
+                 placeholder="Enter your password" required />
+          <div class="invalid-feedback">Password is required.</div>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 mt-1"
+                style="border-radius:12px; font-weight:600;">Log In</button>
+      </form>
+
+      <p class="text-center text-muted small mt-3 mb-0">
+        Don't have an account? <a href="{{ url_for('signup') }}">Sign up</a>
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Client-side validation
+  document.getElementById('login-form').addEventListener('submit', function(e) {
+    const form = this;
+    if (!form.checkValidity()) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    form.classList.add('was-validated');
+  });
+</script>
+{% endblock %}
