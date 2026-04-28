@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
-from app.models import User
+from app.models import User, StudySession
 from app import db
 
 main = Blueprint('main', __name__)
@@ -49,9 +49,25 @@ def edit_profile():
 @main.route('/sessions')
 @login_required
 def sessions():
-    return render_template('study_sessions.html')
+    all_sessions = StudySession.query.all()
+    return render_template('study_sessions.html', sessions=all_sessions)
 
 @main.route('/create_session', methods=['GET', 'POST'])
 @login_required
 def create_session():
+    if request.method == 'POST':
+        session = StudySession(
+            title=request.form.get('name'),
+            unit=request.form.get('unit'),
+            date=request.form.get('date'),
+            time=request.form.get('time'),
+            location=request.form.get('location'),
+            mode=request.form.get('mode'),
+            max_spots=request.form.get('max_participants', 6),
+            creator_id=current_user.id
+        )
+        db.session.add(session)
+        db.session.commit()
+        flash('Session created successfully!', 'success')
+        return redirect(url_for('main.sessions'))
     return render_template('create_session.html')

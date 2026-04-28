@@ -8,7 +8,7 @@ def load_user(user_id):
 
 class User(UserMixin, db.Model):
     __tablename__ = 'user'
-    
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
@@ -28,3 +28,21 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return f'<User {self.email}>'
+
+
+class StudySession(db.Model):
+    __tablename__ = 'study_session'
+
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    unit = db.Column(db.String(50), nullable=False)
+    date = db.Column(db.String(50))
+    time = db.Column(db.String(20))
+    location = db.Column(db.String(200))
+    mode = db.Column(db.String(50))
+    max_spots = db.Column(db.Integer, default=6)
+    creator_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    creator = db.relationship('User', backref='sessions')
+
+    def __repr__(self):
+        return f'<StudySession {self.title}>'
