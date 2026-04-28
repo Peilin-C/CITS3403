@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Browse Buddies — Study Buddy{% endblock %}
+
+{% block content %}
+<div class="container py-4" style="max-width:1100px;">
+  <h1 class="page-title">Find Study Buddies</h1>
+  <p class="page-subtitle">Browse students by units, availability, and study preferences</p>
+
+  <form method="GET" action="{{ url_for('main.browse') }}">
+    <div class="row g-3 mb-4">
+      <div class="col-md-5">
+        <input type="text" name="unit" class="form-control form-control-lg"
+               placeholder="Search by unit (e.g. CITS3403)"
+               value="{{ request.args.get('unit', '') }}">
+      </div>
+      <div class="col-md-4">
+        <select name="availability" class="form-select form-select-lg">
+          <option value="">All Availability</option>
+          <option value="Morning">Morning</option>
+          <option value="Afternoon">Afternoon</option>
+          <option value="Evening">Evening</option>
+          <option value="Weekends">Weekends</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <select name="study_style" class="form-select form-select-lg">
+          <option value="">All Study Styles</option>
+          <option value="Group study">Group study</option>
+          <option value="Quiet study">Quiet study</option>
+          <option value="Online study">Online study</option>
+          <option value="In-person study">In-person study</option>
+        </select>
+      </div>
+      <div class="col-12">
+        <button type="submit" class="btn btn-primary px-4">Search</button>
+        <a href="{{ url_for('main.browse') }}" class="btn btn-outline-secondary px-4 ms-2">Clear</a>
+      </div>
+    </div>
+  </form>
+
+  <div class="row g-4 mb-5">
+    {% if users %}
+      {% for user in users %}
+      <div class="col-md-4">
+        <div class="user-card">
+          {% if user.open_to_teams %}
+          <span class="badge-project">Open to Team Project</span>
+          {% else %}
+          <div class="spacer-top"></div>
+          {% endif %}
+          <h4>{{ user.name }}</h4>
+          <p><i class="bi bi-book me-2 text-primary"></i><strong>Units:</strong> {{ user.units or 'Not specified' }}</p>
+          <p><i class="bi bi-clock me-2 text-primary"></i><strong>Availability:</strong> {{ user.availability or 'Not specified' }}</p>
+          <p><i class="bi bi-people me-2 text-primary"></i><strong>Style:</strong> {{ user.study_style or 'Not specified' }}</p>
+          <a href="{{ url_for('main.profile') }}" class="btn btn-primary w-100 mb-2 mt-3">View Profile</a>
+          <button class="btn btn-outline-primary w-100">Send Request</button>
+        </div>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="col-12 text-center py-5">
+        <p class="text-muted">No study buddies found. Try adjusting your filters!</p>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
