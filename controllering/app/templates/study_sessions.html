@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<main>
+  <div class="container py-5">
+    <h1 class="page-title text-center">Study Sessions</h1>
+    <p class="page-subtitle text-center">Find and join sessions that match your units and schedule</p>
+    <div class="session-card"><span class="badge-unit">CITS2200</span><div class="session-title">Math Study Group</div><p class="session-text"><i class="bi bi-clock me-2 text-primary"></i>Today at 5:00 PM</p><p class="session-text"><i class="bi bi-geo-alt me-2 text-primary"></i>Reid Library, Level 2</p><p class="session-text"><i class="bi bi-people me-2 text-primary"></i>3 / 6 joined</p><button class="btn btn-primary mt-3 px-4"><i class="bi bi-person-plus me-2"></i>Join Session</button></div>
+    <div class="session-card"><span class="badge-unit">CITS2002</span><div class="session-title">Programming Revision</div><p class="session-text"><i class="bi bi-clock me-2 text-primary"></i>Today at 7:00 PM</p><p class="session-text"><i class="bi bi-geo-alt me-2 text-primary"></i>EZONE, Room 101</p><p class="session-text"><i class="bi bi-people me-2 text-primary"></i>2 / 4 joined</p><button class="btn btn-primary mt-3 px-4"><i class="bi bi-person-plus me-2"></i>Join Session</button></div>
+    <div class="session-card"><span class="badge-unit">CITS3001</span><div class="session-title">Database Practice</div><p class="session-text"><i class="bi bi-clock me-2 text-primary"></i>Tomorrow at 3:30 PM</p><p class="session-text"><i class="bi bi-geo-alt me-2 text-primary"></i>Online (Zoom)</p><p class="session-text"><i class="bi bi-people me-2 text-primary"></i>5 / 8 joined</p><button class="btn btn-primary mt-3 px-4"><i class="bi bi-person-plus me-2"></i>Join Session</button></div>
+    <div class="session-card"><span class="badge-unit">CITS3403</span><div class="session-title">Web Dev Project Sprint</div><p class="session-text"><i class="bi bi-clock me-2 text-primary"></i>Friday at 2:00 PM</p><p class="session-text"><i class="bi bi-geo-alt me-2 text-primary"></i>Computer Lab 1.17</p><p class="session-text"><i class="bi bi-people me-2 text-primary"></i>4 / 6 joined</p><button class="btn btn-primary mt-3 px-4"><i class="bi bi-person-plus me-2"></i>Join Session</button></div>
+    <div class="text-center mt-4 pb-5"><a href="create_session.html" class="btn btn-success px-4 py-2"><i class="bi bi-plus-circle me-2"></i>Create New Session</a></div>
+  </div>
+</main>
+
+{% endblock %}

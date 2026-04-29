@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<main>
+  <div class="container py-4" style="max-width:1100px;">
+    <h1 class="page-title">Find Study Buddies</h1>
+    <p class="page-subtitle">Browse students by units, availability, and study preferences</p>
+    <div class="row g-3 mb-4">
+      <div class="col-md-5"><input type="text" class="form-control form-control-lg" placeholder="🔍  Search by unit (e.g. CITS3403)"></div>
+      <div class="col-md-4"><select class="form-select form-select-lg"><option>All Availability</option><option>Morning</option><option>Afternoon</option><option>Evening</option><option>Weekends</option></select></div>
+      <div class="col-md-3"><select class="form-select form-select-lg"><option>All Study Styles</option><option>Group study</option><option>Quiet study</option><option>Online study</option><option>In-person study</option></select></div>
+    </div>
+    <div class="row g-4 mb-5">
+      <div class="col-md-4"><div class="user-card"><span class="badge-project">Open to Team Project</span><h4>Aisha Khan</h4><p><i class="bi bi-book me-2 text-primary"></i><strong>Units:</strong> CITS3403, CITS3002</p><p><i class="bi bi-clock me-2 text-primary"></i><strong>Availability:</strong> Tue/Thu afternoons</p><p><i class="bi bi-people me-2 text-primary"></i><strong>Style:</strong> Group study</p><a href="profile.html" class="btn btn-primary w-100 mb-2 mt-3">View Profile</a><button class="btn btn-outline-primary w-100">Send Request</button></div></div>
+      <div class="col-md-4"><div class="user-card"><div class="spacer-top"></div><h4>Daniel Lee</h4><p><i class="bi bi-book me-2 text-primary"></i><strong>Units:</strong> CITS5505</p><p><i class="bi bi-clock me-2 text-primary"></i><strong>Availability:</strong> Weekends</p><p><i class="bi bi-people me-2 text-primary"></i><strong>Style:</strong> Quiet study</p><a href="profile.html" class="btn btn-primary w-100 mb-2 mt-3">View Profile</a><button class="btn btn-outline-primary w-100">Send Request</button></div></div>
+      <div class="col-md-4"><div class="user-card"><span class="badge-project">Open to Team Project</span><h4>Mia Chen</h4><p><i class="bi bi-book me-2 text-primary"></i><strong>Units:</strong> CITS3403</p><p><i class="bi bi-clock me-2 text-primary"></i><strong>Availability:</strong> Mon evenings</p><p><i class="bi bi-people me-2 text-primary"></i><strong>Style:</strong> Online study</p><a href="profile.html" class="btn btn-primary w-100 mb-2 mt-3">View Profile</a><button class="btn btn-outline-primary w-100">Send Request</button></div></div>
+      <div class="col-md-4"><div class="user-card"><span class="badge-project">Open to Team Project</span><h4>Ryan Patel</h4><p><i class="bi bi-book me-2 text-primary"></i><strong>Units:</strong> CITS3001</p><p><i class="bi bi-clock me-2 text-primary"></i><strong>Availability:</strong> Morning sessions</p><p><i class="bi bi-people me-2 text-primary"></i><strong>Style:</strong> Group study</p><a href="profile.html" class="btn btn-primary w-100 mb-2 mt-3">View Profile</a><button class="btn btn-outline-primary w-100">Send Request</button></div></div>
+      <div class="col-md-4"><div class="user-card"><div class="spacer-top"></div><h4>Sophia Nguyen</h4><p><i class="bi bi-book me-2 text-primary"></i><strong>Units:</strong> CITS3403</p><p><i class="bi bi-clock me-2 text-primary"></i><strong>Availability:</strong> Weekday evenings</p><p><i class="bi bi-people me-2 text-primary"></i><strong>Style:</strong> Online study</p><a href="profile.html" class="btn btn-primary w-100 mb-2 mt-3">View Profile</a><button class="btn btn-outline-primary w-100">Send Request</button></div></div>
+      <div class="col-md-4"><div class="user-card"><span class="badge-project">Open to Team Project</span><h4>Arjun Mehta</h4><p><i class="bi bi-book me-2 text-primary"></i><strong>Units:</strong> CITS2200, CITS2005</p><p><i class="bi bi-clock me-2 text-primary"></i><strong>Availability:</strong> Fri afternoons</p><p><i class="bi bi-people me-2 text-primary"></i><strong>Style:</strong> In-person study</p><a href="profile.html" class="btn btn-primary w-100 mb-2 mt-3">View Profile</a><button class="btn btn-outline-primary w-100">Send Request</button></div></div>
+    </div>
+  </div>
+</main>
+
+{% endblock %}
+
