@@ -138,3 +138,17 @@ def decline_request(request_id):
     db.session.commit()
     flash('Buddy request declined.', 'info')
     return redirect(url_for('main.profile'))
+
+@main.route('/buddies')
+@login_required
+def buddies():
+    accepted_sent = BuddyRequest.query.filter_by(
+        sender_id=current_user.id,
+        status='accepted'
+    ).all()
+    accepted_received = BuddyRequest.query.filter_by(
+        receiver_id=current_user.id,
+        status='accepted'
+    ).all()
+    buddies = [r.receiver for r in accepted_sent] + [r.sender for r in accepted_received]
+    return render_template('buddies.html', buddies=buddies)
