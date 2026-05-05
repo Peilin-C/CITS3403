@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+{% block title %}Study Buddy — Find Your Study Partner{% endblock %}
+
+{% block extra_css %}
+<style>
+  .hero { background: linear-gradient(135deg, #1a1f5e 0%, #2d35a0 55%, #3b48c8 100%); color: white; padding: 90px 0 80px; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 75% 30%, rgba(245,158,11,0.12) 0%, transparent 50%), radial-gradient(circle at 15% 80%, rgba(72,85,232,0.25) 0%, transparent 45%); pointer-events: none; }
+  .hero-grid-bg { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 40px 40px; pointer-events: none; }
+  .hero h1 { font-size: clamp(2.4rem, 5vw, 3.6rem); line-height: 1.18; font-family: 'Playfair Display', serif; }
+  .hero h1 .highlight { color: #f59e0b; }
+  .hero p.lead { font-size: 1.15rem; color: rgba(255,255,255,0.78); font-weight: 300; line-height: 1.7; }
+  .hero-badge { display: inline-flex; align-items: center; gap: 7px; background: rgba(245,158,11,0.18); border: 1px solid rgba(245,158,11,0.35); color: #f59e0b; padding: 7px 16px; border-radius: 999px; font-size: 0.82rem; font-weight: 600; margin-bottom: 20px; }
+  .hero-badge .dot { width: 6px; height: 6px; background: #f59e0b; border-radius: 50%; animation: pulseDot 2s ease-in-out infinite; }
+  .hero-stats { display: flex; gap: 28px; margin-top: 30px; flex-wrap: wrap; }
+  .hero-stat .num { font-family: 'Playfair Display', serif; font-size: 1.7rem; font-weight: 700; color: #f59e0b; line-height: 1; }
+  .hero-stat .lbl { font-size: 0.78rem; color: rgba(255,255,255,0.55); margin-top: 2px; }
+  .hero-cta-group { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 36px; }
+  .btn-hero-primary { background: #f59e0b; color: #1a1f5e; font-weight: 700; padding: 14px 30px; border-radius: 14px; font-size: 1rem; border: none; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.25s; box-shadow: 0 4px 20px rgba(245,158,11,0.35); }
+  .btn-hero-primary:hover { background: #fbbf24; transform: translateY(-2px); color: #1a1f5e; }
+  .btn-hero-secondary { background: rgba(255,255,255,0.1); color: #fff; font-weight: 500; padding: 14px 28px; border-radius: 14px; font-size: 1rem; border: 1.5px solid rgba(255,255,255,0.3); text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.25s; }
+  .btn-hero-secondary:hover { background: rgba(255,255,255,0.18); color: #fff; transform: translateY(-2px); }
+  .hero-scene { width: 100%; max-width: 420px; animation: fadeIn 0.9s ease 0.3s both; }
+  .features { padding: 80px 0 60px; }
+  .feature-card { background: #fff; border-radius: 18px; padding: 32px 28px; box-shadow: 0 8px 32px rgba(26,31,94,0.10); height: 100%; transition: transform 0.25s, box-shadow 0.25s; border: 1px solid rgba(26,31,94,0.06); }
+  .feature-card:hover { transform: translateY(-6px); box-shadow: 0 16px 48px rgba(26,31,94,0.14); }
+  .feature-icon { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 20px; }
+  .fi-amber { background: #fef3c7; color: #b45309; }
+  .fi-blue  { background: #ede9fe; color: #6d28d9; }
+  .fi-green { background: #d1fae5; color: #065f46; }
+  .feature-card h5 { font-size: 1.15rem; font-weight: 600; margin-bottom: 10px; color: #1a1f5e; font-family: 'Playfair Display', serif; }
+  .feature-card p { color: #6b7280; font-size: 0.93rem; line-height: 1.65; margin: 0; }
+  @keyframes floatBook  { 0%,100%{transform:translateY(0px) rotate(-4deg);} 50%{transform:translateY(-18px) rotate(-4deg);} }
+  @keyframes floatBook2 { 0%,100%{transform:translateY(-8px) rotate(6deg);} 50%{transform:translateY(10px) rotate(6deg);} }
+  @keyframes floatBook3 { 0%,100%{transform:translateY(4px) rotate(-2deg);} 50%{transform:translateY(-14px) rotate(-2deg);} }
+  @keyframes orbit { 0%{transform:rotate(0deg) translateX(130px) rotate(0deg);} 100%{transform:rotate(360deg) translateX(130px) rotate(-360deg);} }
+  @keyframes pulseRing { 0%,100%{opacity:0.18;} 50%{opacity:0.06;} }
+  @keyframes pulseDot  { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+  @keyframes slideUp   { from{opacity:0;transform:translateY(40px);} to{opacity:1;transform:translateY(0);} }
+  @keyframes fadeIn    { from{opacity:0;} to{opacity:1;} }
+  .hero-content > * { animation: slideUp 0.7s ease both; }
+  .hero-content .hero-badge { animation-delay: 0.05s; }
+  .hero-content h1 { animation-delay: 0.15s; }
+  .hero-content .lead { animation-delay: 0.28s; }
+  .hero-content .hero-stats { animation-delay: 0.38s; }
+  .hero-content .hero-cta-group { animation-delay: 0.48s; }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="container position-relative">
+    <div class="row align-items-center gy-5">
+      <div class="col-lg-6 hero-content">
+        <div class="hero-badge"><span class="dot"></span>Now live at UWA</div>
+        <h1>Find your perfect<br><span class="highlight">Study Buddy.</span></h1>
+        <p class="lead mt-3">Connect with students in your units, join study sessions, and build the team you need to ace your semester.</p>
+        <div class="hero-stats">
+          <div class="hero-stat"><div class="num">200+</div><div class="lbl">Students</div></div>
+          <div class="hero-stat"><div class="num">50+</div><div class="lbl">Active Sessions</div></div>
+          <div class="hero-stat"><div class="num">30+</div><div class="lbl">Units Covered</div></div>
+        </div>
+        <div class="hero-cta-group">
+          <a href="{{ url_for('auth.signup') }}" class="btn-hero-primary"><i class="bi bi-rocket-takeoff-fill"></i>Get Started Free</a>
+          <a href="{{ url_for('main.browse') }}" class="btn-hero-secondary"><i class="bi bi-search"></i>Browse Buddies</a>
+        </div>
+      </div>
+      <div class="col-lg-6 d-flex justify-content-center">
+        <svg class="hero-scene" viewBox="0 0 420 360" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="210" cy="180" r="155" stroke="rgba(255,255,255,0.06)" stroke-width="1.5" style="animation:pulseRing 4s ease-in-out infinite;"/>
+          <circle cx="210" cy="180" r="120" stroke="rgba(245,158,11,0.12)" stroke-width="1" style="animation:pulseRing 4s ease-in-out infinite 1s;"/>
+          <circle cx="210" cy="180" r="38" fill="rgba(245,158,11,0.15)" stroke="rgba(245,158,11,0.4)" stroke-width="1.5"/>
+          <circle cx="210" cy="180" r="26" fill="rgba(245,158,11,0.25)"/>
+          <text x="210" y="188" text-anchor="middle" font-size="22">📚</text>
+          <g style="animation:orbit 12s linear infinite;transform-origin:210px 180px;">
+            <circle cx="210" cy="50" r="22" fill="#2d35a0" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+            <text x="210" y="57" text-anchor="middle" font-size="18">👩‍💻</text>
+            <line x1="210" y1="72" x2="210" y2="142" stroke="rgba(245,158,11,0.35)" stroke-width="1" stroke-dasharray="4 4"/>
+          </g>
+          <g style="animation:orbit 12s linear infinite 4s;transform-origin:210px 180px;">
+            <circle cx="210" cy="50" r="22" fill="#3b48c8" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+            <text x="210" y="57" text-anchor="middle" font-size="18">🧑‍🎓</text>
+            <line x1="210" y1="72" x2="210" y2="142" stroke="rgba(72,85,232,0.4)" stroke-width="1" stroke-dasharray="4 4"/>
+          </g>
+          <g style="animation:orbit 12s linear infinite 8s;transform-origin:210px 180px;">
+            <circle cx="210" cy="50" r="22" fill="#1a1f5e" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+            <text x="210" y="57" text-anchor="middle" font-size="18">👩‍🎓</text>
+            <line x1="210" y1="72" x2="210" y2="142" stroke="rgba(255,255,255,0.2)" stroke-width="1" stroke-dasharray="4 4"/>
+          </g>
+          <g style="animation:floatBook 4.5s ease-in-out infinite;transform-origin:60px 90px;">
+            <rect x="38" y="75" width="44" height="32" rx="5" fill="#f59e0b" opacity="0.9"/>
+            <rect x="58" y="75" width="4" height="32" fill="rgba(0,0,0,0.15)"/>
+            <line x1="42" y1="83" x2="56" y2="83" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+            <line x1="42" y1="89" x2="56" y2="89" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+            <line x1="42" y1="95" x2="56" y2="95" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+          </g>
+          <g style="animation:floatBook2 5.5s ease-in-out infinite;transform-origin:340px 280px;">
+            <rect x="318" y="264" width="44" height="32" rx="5" fill="#4855e8" opacity="0.85"/>
+            <rect x="338" y="264" width="4" height="32" fill="rgba(0,0,0,0.15)"/>
+            <line x1="322" y1="272" x2="336" y2="272" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+            <line x1="322" y1="278" x2="336" y2="278" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+            <line x1="322" y1="284" x2="336" y2="284" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+          </g>
+          <g style="animation:floatBook3 3.8s ease-in-out infinite;transform-origin:355px 90px;">
+            <rect x="337" y="75" width="36" height="26" rx="4" fill="#22c55e" opacity="0.8"/>
+            <rect x="353" y="75" width="3" height="26" fill="rgba(0,0,0,0.15)"/>
+            <line x1="340" y1="82" x2="351" y2="82" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+            <line x1="340" y1="87" x2="351" y2="87" stroke="rgba(255,255,255,0.35)" stroke-width="1"/>
+          </g>
+          <g style="animation:floatBook 6s ease-in-out infinite 1s;transform-origin:55px 280px;">
+            <rect x="37" y="266" width="36" height="26" rx="4" fill="#a78bfa" opacity="0.8"/>
+            <rect x="53" y="266" width="3" height="26" fill="rgba(0,0,0,0.15)"/>
+            <line x1="40" y1="273" x2="51" y2="273" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+            <line x1="40" y1="279" x2="51" y2="279" stroke="rgba(255,255,255,0.35)" stroke-width="1"/>
+          </g>
+          <circle cx="148" cy="62" r="3" fill="rgba(245,158,11,0.7)" style="animation:pulseRing 3s infinite 0.5s;"/>
+          <circle cx="290" cy="100" r="2.5" fill="rgba(255,255,255,0.5)" style="animation:pulseRing 2.5s infinite 1.2s;"/>
+          <circle cx="100" cy="265" r="2" fill="rgba(245,158,11,0.6)" style="animation:pulseRing 3.5s infinite 0.8s;"/>
+          <circle cx="320" cy="230" r="3" fill="rgba(72,85,232,0.6)" style="animation:pulseRing 2.8s infinite 1.5s;"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="features">
+  <div class="container">
+    <div class="text-center" style="margin-bottom:50px;">
+      <h2 style="font-size:2rem;color:#1a1f5e;">Everything you need to study smarter</h2>
+      <p style="color:#6b7280;max-width:500px;margin:12px auto 0;">Built for UWA students by UWA students.</p>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <a href="{{ url_for('main.browse') }}" style="text-decoration:none;color:inherit;">
+          <div class="feature-card">
+            <div class="feature-icon fi-amber"><i class="bi bi-people-fill"></i></div>
+            <h5>Find Study Buddies</h5>
+            <p>Filter by unit, availability, and study style. Connect with students who match your goals.</p>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-4">
+        <a href="{{ url_for('main.browse') }}" style="text-decoration:none;color:inherit;">
+          <div class="feature-card">
+            <div class="feature-icon fi-blue"><i class="bi bi-calendar-check-fill"></i></div>
+            <h5>Book Study Sessions</h5>
+            <p>Create and join sessions at the library, EZONE, online — wherever suits your group.</p>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-4">
+        <a href="{{ url_for('main.browse') }}" style="text-decoration:none;color:inherit;">
+          <div class="feature-card">
+            <div class="feature-icon fi-green"><i class="bi bi-briefcase-fill"></i></div>
+            <h5>Build Project Teams</h5>
+            <p>Toggle "Open to Team Project" and let classmates know you're looking for teammates.</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="background:#1a1f5e;padding:60px 0;">
+  <div class="container text-center">
+    <h2 style="color:white;font-size:2rem;font-family:'Playfair Display',serif;">Ready to find your study buddy?</h2>
+    <p style="color:rgba(255,255,255,0.6);margin-top:10px;">Join hundreds of UWA students already using Study Buddy.</p>
+    <div class="d-flex gap-3 justify-content-center mt-4 flex-wrap">
+      <a href="{{ url_for('auth.signup') }}" class="btn-hero-primary"><i class="bi bi-person-plus-fill"></i>Create Free Account</a>
+      <a href="{{ url_for('auth.login') }}" class="btn-hero-secondary">Already have an account? Log in</a>
+    </div>
+  </div>
+</section>
+{% endblock %}
