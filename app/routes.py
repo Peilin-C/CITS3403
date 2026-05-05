@@ -71,3 +71,17 @@ def create_session():
         flash('Session created successfully!', 'success')
         return redirect(url_for('main.sessions'))
     return render_template('create_session.html')
+
+@main.route('/sessions/<int:session_id>/join', methods=['POST'])
+@login_required
+def join_session(session_id):
+    session = StudySession.query.get_or_404(session_id)
+    if current_user in session.participants:
+        flash('You have already joined this session!', 'warning')
+    elif len(session.participants) >= session.max_spots:
+        flash('This session is full!', 'danger')
+    else:
+        session.participants.append(current_user)
+        db.session.commit()
+        flash('Successfully joined the session!', 'success')
+    return redirect(url_for('main.sessions'))

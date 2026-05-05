@@ -15,9 +15,17 @@
       <p class="session-text"><i class="bi bi-clock me-2 text-primary"></i>{{ session.time }}</p>
       <p class="session-text"><i class="bi bi-geo-alt me-2 text-primary"></i>{{ session.location }}</p>
       <p class="session-text"><i class="bi bi-people me-2 text-primary"></i>{{ session.mode }}</p>
-      <button class="btn btn-primary mt-3 px-4">
-        <i class="bi bi-person-plus me-2"></i>Join Session
-      </button>
+      {% if current_user in session.participants %}
+    <button class="btn btn-secondary mt-3 px-4" disabled>Already Joined</button>
+    {% elif session.participants|length >= session.max_spots %}
+    <button class="btn btn-danger mt-3 px-4" disabled>Full</button>
+    {% else %}
+    <form action="{{ url_for('main.join_session', session_id=session.id) }}" method="POST">
+    <button type="submit" class="btn btn-primary mt-3 px-4">
+      <i class="bi bi-person-plus me-2"></i>Join Session
+    </button>
+  </form>
+{% endif %}
     </div>
     {% endfor %}
   {% else %}
