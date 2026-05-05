@@ -24,15 +24,19 @@ def create_app():
         db.create_all()
 
     @app.context_processor
-    def inject_pending_requests():
+    def inject_counts():
         from flask_login import current_user
         if current_user.is_authenticated:
-            from app.models import BuddyRequest
-            count = BuddyRequest.query.filter_by(
+            from app.models import BuddyRequest, Message
+            pending = BuddyRequest.query.filter_by(
                 receiver_id=current_user.id,
                 status='pending'
             ).count()
-            return {'pending_requests': count}
-        return {'pending_requests': 0}
+            unread = Message.query.filter_by(
+                receiver_id=current_user.id,
+                is_read=False
+            ).count()
+            return {'pending_requests': pending, 'unread_messages': unread}
+        return {'pending_requests': 0, 'unread_messages': 0}
 
     return app

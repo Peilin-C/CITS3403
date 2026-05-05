@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
-from app.models import User, StudySession, BuddyRequest
+from app.models import User, StudySession, BuddyRequest, Message
 from app import db
 
 main = Blueprint('main', __name__)
@@ -33,18 +33,8 @@ def profile():
         receiver_id=current_user.id,
         status='pending'
     ).all()
-    accepted_sent = BuddyRequest.query.filter_by(
-        sender_id=current_user.id,
-        status='accepted'
-    ).all()
-    accepted_received = BuddyRequest.query.filter_by(
-        receiver_id=current_user.id,
-        status='accepted'
-    ).all()
-    buddies = [r.receiver for r in accepted_sent] + [r.sender for r in accepted_received]
     return render_template('profile.html', user=current_user,
-                          incoming_requests=incoming_requests,
-                          buddies=buddies)
+                          incoming_requests=incoming_requests)
 
 @main.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
@@ -152,3 +142,44 @@ def buddies():
     ).all()
     buddies = [r.receiver for r in accepted_sent] + [r.sender for r in accepted_received]
     return render_template('buddies.html', buddies=buddies)
+
+@main.route('/messages')
+@login_required
+def messages():
+    accepted_sent = BuddyRequest.query.filter_by(
+        sender_id=current_user.id,
+        status='accepted'
+    ).all()
+    accepted_received = BuddyRequest.query.filter_by(
+        receiver_id=current_user.id,
+        status='accepted'
+    ).all()
+    buddies = [r.receiver for r in accepted_sent] + [r.sender for r in accepted_received]
+    return render_template('messages.html', buddies=buddies)
+
+@main.route('/messages/<int:user_id>', methods=['GET', 'POST'])
+@login_required
+def conversation(user_id):
+    other_user = User.query.get_or_404(user_id)
+    if request.method == 'POST':
+        content = request.form.get('content')
+        if content:
+            msg = Message(
+                sender_id=current_user.id,
+                receiver_id=user_id,
+                content=content
+            )
+            db.session.add(msg)
+            db.session.commit()
+        return redirect(url_for('main.conversation', user_id=user_id))
+    Message.query.filter_by(
+        sender_id=user_id,
+        receiver_id=current_user.id,
+        is_read=False
+    ).update({'is_read': True})
+    db.session.commit()
+    msgs = Message.query.filter(
+        ((Message.sender_id == current_user.id) & (Message.receiver_id == user_id)) |
+        ((Message.sender_id == user_id) & (Message.receiver_id == current_user.id))
+    ).order_by(Message.timestamp).all()
+    return render_template('conversation.html', other_user=other_user, messages=msgs)
