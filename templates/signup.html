@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% block title %}Sign Up — Study Buddy{% endblock %}
+
+{% block extra_css %}
+<style>
+  .auth-card { max-width: 420px; width: 100%; }
+  .strength-bar-wrap { display: none; }
+  .strength-bar-wrap.visible { display: block; }
+  .strength-track { height: 5px; background: #e5e7eb; border-radius: 99px; overflow: hidden; }
+  .strength-fill { height: 100%; width: 0; border-radius: 99px; transition: width 0.3s, background 0.3s; }
+  .strength-label { font-size: 0.78rem; margin-top: 4px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-start justify-content-center pt-5 pb-5">
+  <div class="card shadow-sm border auth-card">
+    <div class="card-body p-4">
+      <h2 class="card-title h4 mb-1">Create an account</h2>
+      <p class="text-muted small mb-4">Join and find your study buddies</p>
+
+      <!-- Alert banner -->
+      <div id="signup-alert" class="alert d-none" role="alert"></div>
+
+      <form method="POST" action="{{ url_for('signup') }}" id="signup-form" novalidate>
+        <!-- CSRF token (uncomment when Flask-WTF is set up) -->
+        <!-- {{ form.hidden_tag() }} -->
+
+        <!-- Full Name -->
+        <div class="mb-3">
+          <label for="signup-name" class="form-label">Full Name</label>
+          <input type="text" class="form-control" id="signup-name" name="name"
+                 placeholder="Jane Doe" required />
+          <div class="invalid-feedback">Name is required.</div>
+        </div>
+
+        <!-- Email -->
+        <div class="mb-3">
+          <label for="signup-email" class="form-label">Student Email</label>
+          <input type="email" class="form-control" id="signup-email" name="email"
+                 placeholder="you@university.edu" required />
+          <div class="invalid-feedback">Please enter a valid email address.</div>
+        </div>
+
+        <!-- Password -->
+        <div class="mb-3">
+          <label for="signup-password" class="form-label">Password</label>
+          <input type="password" class="form-control" id="signup-password" name="password"
+                 placeholder="Min 8 characters" minlength="8" required
+                 oninput="updateStrength(this.value)" />
+          <div class="invalid-feedback">Password must be at least 8 characters.</div>
+          <!-- Password Strength Bar -->
+          <div class="strength-bar-wrap mt-2" id="strength-wrap">
+            <div class="strength-track">
+              <div class="strength-fill" id="strength-fill"></div>
+            </div>
+            <div class="strength-label text-muted" id="strength-label"></div>
+          </div>
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="mb-3">
+          <label for="signup-confirm" class="form-label">Confirm Password</label>
+          <input type="password" class="form-control" id="signup-confirm" name="confirm"
+                 placeholder="Re-enter your password" required />
+          <div class="invalid-feedback" id="confirm-feedback">Please confirm your password.</div>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 mt-1"
+                style="border-radius:12px; font-weight:600;">Sign Up</button>
+      </form>
+
+      <p class="text-center text-muted small mt-3 mb-0">
+        Already have an account? <a href="{{ url_for('login') }}">Log in</a>
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Password strength
+  const strengthLabels = ['Very weak', 'Weak', 'Fair', 'Strong', 'Very strong'];
+  const strengthColors = ['#dc2626', '#f97316', '#eab308', '#22c55e', '#16a34a'];
+
+  function getStrength(pw) {
+    let s = 0;
+    if (pw.length >= 8)          s++;
+    if (pw.length >= 12)         s++;
+    if (/[A-Z]/.test(pw))        s++;
+    if (/[0-9]/.test(pw))        s++;
+    if (/[^A-Za-z0-9]/.test(pw)) s++;
+    return s;
+  }
+
+  function updateStrength(pw) {
+    const wrap = document.getElementById('strength-wrap');
+    if (!pw) { wrap.classList.remove('visible'); return; }
+    wrap.classList.add('visible');
+    const score = Math.max(0, getStrength(pw) - 1);
+    document.getElementById('strength-fill').style.width = ((score + 1) / 5 * 100) + '%';
+    document.getElementById('strength-fill').style.background = strengthColors[score];
+    document.getElementById('strength-label').textContent = strengthLabels[score];
+  }
+
+  // Form validation
+  document.getElementById('signup-form').addEventListener('submit', function(e) {
+    const form = this;
+    const pw = document.getElementById('signup-password').value;
+    const confirm = document.getElementById('signup-confirm');
+
+    if (pw !== confirm.value) {
+      confirm.setCustomValidity('Passwords do not match');
+      document.getElementById('confirm-feedback').textContent = 'Passwords do not match.';
+    } else {
+      confirm.setCustomValidity('');
+      document.getElementById('confirm-feedback').textContent = 'Please confirm your password.';
+    }
+
+    if (!form.checkValidity()) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    form.classList.add('was-validated');
+  });
+
+  document.getElementById('signup-confirm').addEventListener('input', function() {
+    this.setCustomValidity('');
+  });
+</script>
+{% endblock %}
