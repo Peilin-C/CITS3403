@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
-from app.models import User, StudySession
+from app.models import User, StudySession, BuddyRequest
 from app import db
 
 main = Blueprint('main', __name__)
@@ -23,12 +23,28 @@ def browse():
     if study_style:
         users = users.filter(User.study_style.contains(study_style))
     users = users.all()
-    return render_template('browse_users.html', users=users)
+    sent_requests = [r.receiver_id for r in current_user.sent_requests]
+    return render_template('browse_users.html', users=users, sent_requests=sent_requests)
 
 @main.route('/profile')
 @login_required
 def profile():
-    return render_template('profile.html', user=current_user)
+    incoming_requests = BuddyRequest.query.filter_by(
+        receiver_id=current_user.id,
+        status='pending'
+    ).all()
+    accepted_sent = BuddyRequest.query.filter_by(
+        sender_id=current_user.id,
+        status='accepted'
+    ).all()
+    accepted_received = BuddyRequest.query.filter_by(
+        receiver_id=current_user.id,
+        status='accepted'
+    ).all()
+    buddies = [r.receiver for r in accepted_sent] + [r.sender for r in accepted_received]
+    return render_template('profile.html', user=current_user,
+                          incoming_requests=incoming_requests,
+                          buddies=buddies)
 
 @main.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
@@ -85,3 +101,40 @@ def join_session(session_id):
         db.session.commit()
         flash('Successfully joined the session!', 'success')
     return redirect(url_for('main.sessions'))
+
+@main.route('/send_request/<int:user_id>', methods=['POST'])
+@login_required
+def send_request(user_id):
+    existing = BuddyRequest.query.filter_by(
+        sender_id=current_user.id,
+        receiver_id=user_id
+    ).first()
+    if existing:
+        flash('Request already sent!', 'warning')
+    else:
+        request_obj = BuddyRequest(
+            sender_id=current_user.id,
+            receiver_id=user_id
+        )
+        db.session.add(request_obj)
+        db.session.commit()
+        flash('Buddy request sent!', 'success')
+    return redirect(url_for('main.browse'))
+
+@main.route('/accept_request/<int:request_id>', methods=['POST'])
+@login_required
+def accept_request(request_id):
+    req = BuddyRequest.query.get_or_404(request_id)
+    req.status = 'accepted'
+    db.session.commit()
+    flash('Buddy request accepted!', 'success')
+    return redirect(url_for('main.profile'))
+
+@main.route('/decline_request/<int:request_id>', methods=['POST'])
+@login_required
+def decline_request(request_id):
+    req = BuddyRequest.query.get_or_404(request_id)
+    req.status = 'declined'
+    db.session.commit()
+    flash('Buddy request declined.', 'info')
+    return redirect(url_for('main.profile'))

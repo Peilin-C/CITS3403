@@ -23,4 +23,16 @@ def create_app():
     with app.app_context():
         db.create_all()
 
+    @app.context_processor
+    def inject_pending_requests():
+        from flask_login import current_user
+        if current_user.is_authenticated:
+            from app.models import BuddyRequest
+            count = BuddyRequest.query.filter_by(
+                receiver_id=current_user.id,
+                status='pending'
+            ).count()
+            return {'pending_requests': count}
+        return {'pending_requests': 0}
+
     return app
