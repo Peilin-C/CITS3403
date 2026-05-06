@@ -3,41 +3,124 @@
 
 {% block content %}
 <div class="container py-5">
-  <h1 class="page-title text-center">Study Sessions</h1>
-  <p class="page-subtitle text-center">Find and join sessions that match your units and schedule</p>
+
+  <h1 class="page-title text-center">
+    Study Sessions
+  </h1>
+
+  <p class="page-subtitle text-center">
+    Find and join sessions that match your units and schedule
+  </p>
 
   {% if sessions %}
+
     {% for session in sessions %}
+
     <div class="session-card">
-      <span class="badge-unit">{{ session.unit }}</span>
-      <div class="session-title">{{ session.title }}</div>
-      <p class="session-text"><i class="bi bi-calendar me-2 text-primary"></i>{{ session.date }}</p>
-      <p class="session-text"><i class="bi bi-clock me-2 text-primary"></i>{{ session.time }}</p>
-      <p class="session-text"><i class="bi bi-geo-alt me-2 text-primary"></i>{{ session.location }}</p>
-      <p class="session-text"><i class="bi bi-people me-2 text-primary"></i>{{ session.mode }}</p>
+
+      <span class="badge-unit">
+        {{ session.unit }}
+      </span>
+
+      <div class="session-title">
+        {{ session.title }}
+      </div>
+
+      <p class="session-text">
+        <i class="bi bi-calendar me-2 text-primary"></i>
+        {{ session.date }}
+      </p>
+
+      <p class="session-text">
+        <i class="bi bi-clock me-2 text-primary"></i>
+        {{ session.time }}
+      </p>
+
+      <p class="session-text">
+        <i class="bi bi-geo-alt me-2 text-primary"></i>
+        {{ session.location }}
+      </p>
+
+      <p class="session-text">
+        <i class="bi bi-people me-2 text-primary"></i>
+        {{ session.mode }}
+      </p>
+
+      <!-- USER ALREADY JOINED -->
       {% if current_user in session.participants %}
-    <button class="btn btn-secondary mt-3 px-4" disabled>Already Joined</button>
-    {% elif session.participants|length >= session.max_spots %}
-    <button class="btn btn-danger mt-3 px-4" disabled>Full</button>
-    {% else %}
-    <form action="{{ url_for('main.join_session', session_id=session.id) }}" method="POST">
-    <button type="submit" class="btn btn-primary mt-3 px-4">
-      <i class="bi bi-person-plus me-2"></i>Join Session
-    </button>
-  </form>
-{% endif %}
+
+      <div class="d-flex gap-2 mt-3">
+
+        <button class="btn btn-secondary px-4" disabled>
+          Already Joined
+        </button>
+
+        {% if session.creator_id == current_user.id %}
+
+        <a
+          href="{{ url_for('main.edit_session', session_id=session.id) }}"
+          class="btn btn-warning px-4">
+
+          <i class="bi bi-pencil-square me-1"></i>
+          Edit
+
+        </a>
+
+        {% endif %}
+
+      </div>
+
+      <!-- SESSION FULL -->
+      {% elif session.participants|length >= session.max_spots %}
+
+      <button class="btn btn-danger mt-3 px-4" disabled>
+        Full
+      </button>
+
+      <!-- USER CAN JOIN -->
+      {% else %}
+
+      <form
+        action="{{ url_for('main.join_session', session_id=session.id) }}"
+        method="POST">
+
+        <button type="submit" class="btn btn-primary mt-3 px-4">
+
+          <i class="bi bi-person-plus me-2"></i>
+          Join Session
+
+        </button>
+
+      </form>
+
+      {% endif %}
+
     </div>
+
     {% endfor %}
+
   {% else %}
+
     <div class="text-center py-5">
-      <p class="text-muted">No sessions yet. Be the first to create one!</p>
+      <p class="text-muted">
+        No sessions yet. Be the first to create one!
+      </p>
     </div>
+
   {% endif %}
 
   <div class="text-center mt-4 pb-5">
-    <a href="{{ url_for('main.create_session') }}" class="btn btn-success px-4 py-2">
-      <i class="bi bi-plus-circle me-2"></i>Create New Session
+
+    <a
+      href="{{ url_for('main.create_session') }}"
+      class="btn btn-success px-4 py-2">
+
+      <i class="bi bi-plus-circle me-2"></i>
+      Create New Session
+
     </a>
+
   </div>
+
 </div>
 {% endblock %}
