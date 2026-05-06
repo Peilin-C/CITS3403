@@ -25,11 +25,30 @@
           <li class="nav-item"><a class="nav-link" href="{{ url_for('main.browse') }}"><i class="bi bi-people"></i>Browse</a></li>
           <li class="nav-item"><a class="nav-link" href="{{ url_for('main.sessions') }}"><i class="bi bi-calendar3"></i>Sessions</a></li>
           {% if current_user.is_authenticated %}
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('main.buddies') }}"><i class="bi bi-people-fill"></i>Buddies</a></li>
+          <li class="nav-item">
+            <a class="nav-link position-relative" href="{{ url_for('main.messages') }}">
+              <i class="bi bi-chat-fill"></i>Messages
+              {% if unread_messages > 0 %}
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size:0.6rem;">
+                {{ unread_messages }}
+              </span>
+              {% endif %}
+            </a>
+          </li>
           <li class="nav-item"><a class="nav-link" href="{{ url_for('main.profile') }}"><i class="bi bi-person-circle"></i>Profile</a></li>
           {% endif %}
         </ul>
         <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
           {% if current_user.is_authenticated %}
+          <a href="{{ url_for('main.profile') }}" class="position-relative me-2" style="color:white;text-decoration:none;">
+            <i class="bi bi-bell-fill" style="font-size:1.2rem;"></i>
+            {% if pending_requests > 0 %}
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size:0.6rem;">
+              {{ pending_requests }}
+            </span>
+            {% endif %}
+          </a>
           <a class="btn-nav-login" href="{{ url_for('auth.logout') }}">Log Out</a>
           {% else %}
           <a class="btn-nav-login" href="{{ url_for('auth.login') }}">Log In</a>

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}My Buddies — Study Buddy{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width:780px; margin:50px auto; padding-bottom:60px;">
+  <h1 class="page-title">My Buddies</h1>
+  <p class="page-subtitle">Students you are connected with</p>
+
+  {% if buddies %}
+    {% for buddy in buddies %}
+    <div class="sb-card mb-3">
+      <div class="d-flex align-items-center justify-content-between">
+        <div>
+          <h5 style="font-family:'Playfair Display',serif;color:var(--navy);margin-bottom:4px;">{{ buddy.name }}</h5>
+          <div class="text-muted" style="font-size:0.85rem;">{{ buddy.email }}</div>
+          <div class="mt-2">
+            <span class="me-3"><i class="bi bi-book me-1 text-primary"></i>{{ buddy.units or 'No units' }}</span>
+            <span class="me-3"><i class="bi bi-clock me-1 text-primary"></i>{{ buddy.availability or 'No availability' }}</span>
+            <span><i class="bi bi-people me-1 text-primary"></i>{{ buddy.study_style or 'No style' }}</span>
+          </div>
+        </div>
+        {% if buddy.open_to_teams %}
+        <span class="badge-project">Open to Team Project</span>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  {% else %}
+    <div class="sb-card text-center py-5">
+      <p class="text-muted">You have no buddies yet!</p>
+      <a href="{{ url_for('main.browse') }}" class="btn btn-primary px-4">Find Study Buddies</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
