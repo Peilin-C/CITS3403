@@ -85,3 +85,28 @@ def join_session(session_id):
         db.session.commit()
         flash('Successfully joined the session!', 'success')
     return redirect(url_for('main.sessions'))
+@main.route('/sessions/<int:session_id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_session(session_id):
+    session = StudySession.query.get_or_404(session_id)
+
+    # Only creator can edit
+    if session.creator_id != current_user.id:
+        flash('You can only edit sessions you created.', 'danger')
+        return redirect(url_for('main.sessions'))
+
+    if request.method == 'POST':
+        session.title = request.form.get('name')
+        session.unit = request.form.get('unit')
+        session.date = request.form.get('date')
+        session.time = request.form.get('time')
+        session.location = request.form.get('location')
+        session.mode = request.form.get('mode')
+        session.max_spots = int(request.form.get('max_participants') or 6)
+
+        db.session.commit()
+
+        flash('Session updated successfully!', 'success')
+        return redirect(url_for('main.sessions'))
+
+    return render_template('edit_session.html', session=session)
