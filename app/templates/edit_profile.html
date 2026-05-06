@@ -20,7 +20,7 @@
       </div>
       <div class="mb-3">
         <label class="form-label fw-semibold">Availability</label>
-        <input type="text" class="form-control form-control-lg" name="availability" value="{{ user.availability or '' }}" placeholder="e.g. Tuesday and Thursday afternoons"/>
+        <textarea class="form-control form-control-lg" name="availability" rows="5" placeholder="e.g. Tuesday and Thursday afternoons">{{ user.availability or '' }}</textarea>
       </div>
       <div class="mb-3">
         <label class="form-label fw-semibold">Study Style</label>
@@ -37,7 +37,7 @@
         <textarea class="form-control form-control-lg" name="study_preferences" rows="4">{{ user.study_preferences or '' }}</textarea>
       </div>
       <div class="mb-4">
-        <label class="form-label fw-semibold">Open to Project Team</label>
+        <label class="form-label fw-semibold">Open to Team Project</label>
         <select class="form-select form-select-lg" name="open_to_teams">
           <option value="yes" {{ 'selected' if user.open_to_teams }}>Yes</option>
           <option value="no" {{ 'selected' if not user.open_to_teams }}>No</option>
