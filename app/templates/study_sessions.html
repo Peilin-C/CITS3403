@@ -92,6 +92,10 @@
         {% endif %}
 
       </div>
+      <p class="session-text">
+        <i class="bi bi-person-check me-2 text-primary"></i>
+        {{ session.participants|length }} / {{ session.max_spots }} participants joined
+      </p>
 
       <!-- USER ALREADY JOINED -->
       {% if current_user in session.participants %}
