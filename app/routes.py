@@ -91,6 +91,19 @@ def join_session(session_id):
         db.session.commit()
         flash('Successfully joined the session!', 'success')
     return redirect(url_for('main.sessions'))
+@main.route('/sessions/<int:session_id>/leave', methods=['POST'])
+@login_required
+def leave_session(session_id):
+    session = StudySession.query.get_or_404(session_id)
+
+    if current_user not in session.participants:
+        flash('You are not currently joined in this session.', 'warning')
+    else:
+        session.participants.remove(current_user)
+        db.session.commit()
+        flash('You have left the session.', 'success')
+
+    return redirect(url_for('main.sessions'))
 @main.route('/sessions/<int:session_id>/edit', methods=['GET', 'POST'])
 @login_required
 def edit_session(session_id):
