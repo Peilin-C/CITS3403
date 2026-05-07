@@ -27,6 +27,11 @@
       </div>
 
       <p class="session-text">
+        <i class="bi bi-person-circle me-2 text-primary"></i>
+        Created by {{ session.creator.name }}
+      </p>
+
+      <p class="session-text">
         <i class="bi bi-calendar me-2 text-primary"></i>
         {{ session.date }}
       </p>
@@ -44,6 +49,11 @@
       <p class="session-text">
         <i class="bi bi-people me-2 text-primary"></i>
         {{ session.mode }}
+      </p>
+      
+      <p class="session-text">
+        <i class="bi bi-person-check me-2 text-primary"></i>
+        {{ session.participants|length }} / {{ session.max_spots }} participants joined
       </p>
 
       <div class="mt-3">
