@@ -46,14 +46,67 @@
         {{ session.mode }}
       </p>
 
+      <div class="mt-3">
+
+        <p class="session-text fw-semibold mb-2">
+          <i class="bi bi-person-lines-fill me-2 text-primary"></i>
+          Participants
+        </p>
+
+        {% if session.participants %}
+
+          <ul class="list-group mb-3">
+
+            {% for participant in session.participants %}
+
+            <li class="list-group-item">
+
+              <strong>{{ participant.name }}</strong>
+              <br>
+              <small class="text-muted">
+                {{ participant.email }}
+              </small>
+
+            </li>
+
+            {% endfor %}
+
+          </ul>
+
+        {% else %}
+
+          <p class="text-muted">
+            No participants have joined yet.
+          </p>
+
+        {% endif %}
+
+      </div>
+
       <!-- USER ALREADY JOINED -->
       {% if current_user in session.participants %}
 
-      <div class="d-flex gap-2 mt-3">
+      <div class="d-flex gap-2 mt-3 flex-wrap">
 
         <button class="btn btn-secondary px-4" disabled>
           Already Joined
         </button>
+
+        <form
+          action="{{ url_for('main.leave_session', session_id=session.id) }}"
+          method="POST">
+
+          <button
+            type="submit"
+            class="btn btn-outline-danger px-4"
+            onclick="return confirm('Are you sure you want to leave this session?');">
+
+            <i class="bi bi-box-arrow-right me-1"></i>
+            Leave
+
+          </button>
+
+        </form>
 
         {% if session.creator_id == current_user.id %}
 
