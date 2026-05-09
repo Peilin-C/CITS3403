@@ -36,6 +36,40 @@ def profile():
     return render_template('profile.html', user=current_user,
                           incoming_requests=incoming_requests)
 
+
+
+@main.route('/profile/<int:user_id>')
+@login_required
+def view_profile(user_id):
+    user = User.query.get_or_404(user_id)
+
+    incoming_requests = []
+
+    # Only show requests on your own profile
+    if user.id == current_user.id:
+        incoming_requests = BuddyRequest.query.filter_by(
+            receiver_id=current_user.id,
+            status='pending'
+        ).all()
+
+    return render_template(
+        'profile.html',
+        user=user,
+        incoming_requests=incoming_requests
+    )
+
+#@main.route('/userprofile')
+#@login_required
+#def profile():
+ #   incoming_requests = BuddyRequest.query.filter_by(
+  #      receiver_id=current_user.id,
+   #     status='pending'
+    #).all()
+    #return render_template('profile.html', user=current_user,
+     #                     incoming_requests=incoming_requests)
+
+                        
+
 @main.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
 def edit_profile():
