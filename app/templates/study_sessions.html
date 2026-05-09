@@ -9,8 +9,19 @@
   </h1>
 
   <p class="page-subtitle text-center">
-    Find and join sessions that match your units and schedule
+    Find, join and create sessions that match your units and schedule
   </p>
+
+  <div class="text-center mt-4 pb-5">
+  <a
+    href="{{ url_for('main.create_session') }}"
+  class="btn btn-success px-4 py-2">
+
+  <i class="bi bi-plus-circle me-2"></i>
+  Create New Session
+
+</a>
+</div>
 
   {% if sessions %}
 
@@ -173,18 +184,6 @@
 
   {% endif %}
 
-  <div class="text-center mt-4 pb-5">
-
-    <a
-      href="{{ url_for('main.create_session') }}"
-      class="btn btn-success px-4 py-2">
-
-      <i class="bi bi-plus-circle me-2"></i>
-      Create New Session
-
-    </a>
-
-  </div>
-
+  
 </div>
 {% endblock %}

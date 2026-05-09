@@ -36,7 +36,7 @@
               {% endif %}
             </a>
           </li>
-          <li class="nav-item"><a class="nav-link" href="{{ url_for('main.profile') }}"><i class="bi bi-person-circle"></i>Profile</a></li>
+          
           {% endif %}
         </ul>
         <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
@@ -49,6 +49,14 @@
             </span>
             {% endif %}
           </a>
+          <a href="{{ url_for('main.profile') }}" 
+          class="d-flex align-items-center text-white text-decoration-none me-3"
+          style="font-weight:600;">
+
+        <i class="bi bi-person-circle me-2" style="font-size:1.1rem;"></i>
+
+        {{ current_user.name if current_user.name else 'Profile' }}
+        </a>
           <a class="btn-nav-login" href="{{ url_for('auth.logout') }}">Log Out</a>
           {% else %}
           <a class="btn-nav-login" href="{{ url_for('auth.login') }}">Log In</a>
