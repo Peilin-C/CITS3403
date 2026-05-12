@@ -24,14 +24,31 @@
 
       <div class="mb-3">
         <label for="password" class="form-label fw-semibold">Password</label>
-        <input type="password" class="form-control form-control-lg" id="password" name="password"
-               placeholder="Min 8 characters" required minlength="8"/>
+      
+        <div class="position-relative">
+          <input type="password" class="form-control form-control-lg pe-5"
+                 id="password" name="password"
+                 placeholder="Min 8 characters" required minlength="8"/>
+      
+          <i class="bi bi-eye position-absolute toggle-password"
+             data-target="password"
+             style="top: 50%; right: 15px; transform: translateY(-50%); cursor: pointer;"></i>
+        </div>
       </div>
-
+      
+      
       <div class="mb-4">
         <label for="confirm" class="form-label fw-semibold">Confirm Password</label>
-        <input type="password" class="form-control form-control-lg" id="confirm" name="confirm"
-               placeholder="Re-enter your password" required/>
+      
+        <div class="position-relative">
+          <input type="password" class="form-control form-control-lg pe-5"
+                 id="confirm" name="confirm"
+                 placeholder="Re-enter your password" required/>
+      
+          <i class="bi bi-eye position-absolute toggle-password"
+             data-target="confirm"
+             style="top: 50%; right: 15px; transform: translateY(-50%); cursor: pointer;"></i>
+        </div>
       </div>
 
       <button type="submit" class="btn btn-primary w-100 py-2" style="font-size:1rem;">
@@ -44,4 +61,24 @@
     </p>
   </div>
 </div>
+
+<!-- to make the password toggleable using an eye -->
+
+{% endblock %}
+{% block extra_js %}
+<script>
+  document.querySelectorAll(".toggle-password").forEach(icon => {
+    icon.addEventListener("click", () => {
+      const targetId = icon.getAttribute("data-target");
+      const input = document.getElementById(targetId);
+
+      const isHidden = input.type === "password";
+      input.type = isHidden ? "text" : "password";
+
+      icon.classList.toggle("bi-eye");
+      icon.classList.toggle("bi-eye-slash");
+    });
+  });
+</script>
+
 {% endblock %}
