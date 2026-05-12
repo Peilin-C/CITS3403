@@ -9,12 +9,12 @@
   <form method="GET" action="{{ url_for('main.browse') }}">
     <div class="row g-3 mb-4">
       <div class="col-md-5">
-        <input type="text" name="unit" class="form-control form-control-lg"
+        <input type="text" name="unit" id="liveSearch" class="form-control form-control-lg"
                placeholder="Search by unit (e.g. CITS3403)"
                value="{{ request.args.get('unit', '') }}">
       </div>
       <div class="col-md-4">
-        <select name="availability" class="form-select form-select-lg">
+        <select name="availability" id="availabilityFilter" class="form-select form-select-lg">
           <option value="">All Availability</option>
           <option value="Morning">Morning</option>
           <option value="Afternoon">Afternoon</option>
@@ -23,7 +23,7 @@
         </select>
       </div>
       <div class="col-md-3">
-        <select name="study_style" class="form-select form-select-lg">
+        <select name="study_style" id="styleFilter" class="form-select form-select-lg">
           <option value="">All Study Styles</option>
           <option value="Group study">Group study</option>
           <option value="Quiet study">Quiet study</option>
@@ -34,14 +34,19 @@
       <div class="col-12">
         <button type="submit" class="btn btn-primary px-4">Search</button>
         <a href="{{ url_for('main.browse') }}" class="btn btn-outline-secondary px-4 ms-2">Clear</a>
+        <span id="resultCount" class="ms-3 text-muted" style="font-size:0.9rem;"></span>
       </div>
     </div>
   </form>
 
-  <div class="row g-4 mb-5">
+  <div class="row g-4 mb-5" id="userGrid">
     {% if users %}
       {% for user in users %}
-      <div class="col-md-4">
+      <div class="col-md-4 user-card-wrapper"
+           data-name="{{ user.name | lower }}"
+           data-units="{{ user.units | lower if user.units else '' }}"
+           data-availability="{{ user.availability | lower if user.availability else '' }}"
+           data-style="{{ user.study_style | lower if user.study_style else '' }}">
         <div class="user-card">
           {% if user.open_to_teams %}
           <span class="badge-project">Open to Team Project</span>
@@ -64,10 +69,70 @@
       </div>
       {% endfor %}
     {% else %}
-      <div class="col-12 text-center py-5">
+      <div class="col-12 text-center py-5" id="noResults">
         <p class="text-muted">No study buddies found. Try adjusting your filters!</p>
       </div>
     {% endif %}
   </div>
 </div>
+
+{% block extra_js %}
+<script>
+  const searchInput = document.getElementById('liveSearch');
+  const availabilityFilter = document.getElementById('availabilityFilter');
+  const styleFilter = document.getElementById('styleFilter');
+  const resultCount = document.getElementById('resultCount');
+
+  function filterCards() {
+    const searchVal = searchInput.value.toLowerCase();
+    const availVal = availabilityFilter.value.toLowerCase();
+    const styleVal = styleFilter.value.toLowerCase();
+
+    const cards = document.querySelectorAll('.user-card-wrapper');
+    let visible = 0;
+
+    cards.forEach(card => {
+      const name = card.dataset.name;
+      const units = card.dataset.units;
+      const availability = card.dataset.availability;
+      const style = card.dataset.style;
+
+      const matchesSearch = name.includes(searchVal) || units.includes(searchVal);
+      const matchesAvail = availVal === '' || availability.includes(availVal);
+      const matchesStyle = styleVal === '' || style.includes(styleVal);
+
+      if (matchesSearch && matchesAvail && matchesStyle) {
+        card.style.display = 'block';
+        visible++;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    resultCount.textContent = visible + (visible !== 1 ? ' buddies' : ' buddy') + ' found';
+
+    const noResults = document.getElementById('noResults');
+    if (noResults) return;
+
+    const grid = document.getElementById('userGrid');
+    let emptyMsg = grid.querySelector('.live-empty');
+    if (visible === 0) {
+      if (!emptyMsg) {
+        emptyMsg = document.createElement('div');
+        emptyMsg.className = 'col-12 text-center py-5 live-empty';
+        emptyMsg.innerHTML = '<p class="text-muted">No buddies match your search!</p>';
+        grid.appendChild(emptyMsg);
+      }
+    } else {
+      if (emptyMsg) emptyMsg.remove();
+    }
+  }
+
+  searchInput.addEventListener('input', filterCards);
+  availabilityFilter.addEventListener('change', filterCards);
+  styleFilter.addEventListener('change', filterCards);
+
+  filterCards();
+</script>
+{% endblock %}
 {% endblock %}
