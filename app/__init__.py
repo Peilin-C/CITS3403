@@ -1,4 +1,5 @@
 from flask import Flask
+from datetime import timedelta
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_wtf.csrf import CSRFProtect
@@ -39,7 +40,7 @@ def create_app():
                 receiver_id=current_user.id,
                 is_read=False
             ).count()
-            return {'pending_requests': pending, 'unread_messages': unread}
-        return {'pending_requests': 0, 'unread_messages': 0}
+            return {'pending_requests': pending, 'unread_messages': unread, 'timedelta': timedelta}
+        return {'pending_requests': 0, 'unread_messages': 0, 'timedelta': timedelta}
 
     return app
