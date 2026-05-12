@@ -1,226 +1,132 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Study Buddy Finder — Sign Up</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="style.css"/>
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}Sign Up — Study Buddy{% endblock %}
 
-  <!-- NAVBAR -->
-  <nav class="sb-nav navbar navbar-expand-lg">
-    <div class="container">
-      <a class="navbar-brand" href="index.html"><div class="logo-icon">📚</div>Study Buddy</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sbNav">
-        <i class="bi bi-list" style="color:white;font-size:1.4rem;"></i>
-      </button>
-      <div class="collapse navbar-collapse" id="sbNav">
-        <ul class="navbar-nav mx-auto gap-1" id="main-nav">
-          <li class="nav-item"><a class="nav-link" href="browse_users.html"><i class="bi bi-people"></i>Browse Buddies</a></li>
-          <li class="nav-item"><a class="nav-link" href="study_sessions.html"><i class="bi bi-calendar3"></i>Sessions</a></li>
-          <li class="nav-item"><a class="nav-link" href="create_session.html"><i class="bi bi-plus-circle"></i>Create Session</a></li>
-          <li class="nav-item"><a class="nav-link" href="profile.html"><i class="bi bi-person-circle"></i>Profile</a></li>
-        </ul>
-        <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
-          <a class="btn-nav-login" href="login.html">Log In</a>
-          <a class="btn-nav-signup" href="signup.html">Sign Up</a>
-        </div>
-      </div>
-    </div>
-  </nav>
+{% block extra_css %}
+<style>
+  .auth-card { max-width: 420px; width: 100%; }
+  .strength-bar-wrap { display: none; }
+  .strength-bar-wrap.visible { display: block; }
+  .strength-track { height: 5px; background: #e5e7eb; border-radius: 99px; overflow: hidden; }
+  .strength-fill { height: 100%; width: 0; border-radius: 99px; transition: width 0.3s, background 0.3s; }
+  .strength-label { font-size: 0.78rem; margin-top: 4px; }
+</style>
+{% endblock %}
 
-  <!-- SIGNUP CARD -->
-  <main class="auth-wrap">
-    <div class="auth-card">
-      <h2>Create an account</h2>
-      <p class="text-muted mb-4" style="font-size:0.95rem;">Join and find your study buddies at UWA</p>
+{% block content %}
+<div class="d-flex align-items-start justify-content-center pt-5 pb-5">
+  <div class="card shadow-sm border auth-card">
+    <div class="card-body p-4">
+      <h2 class="card-title h4 mb-1">Create an account</h2>
+      <p class="text-muted small mb-4">Join and find your study buddies</p>
 
       <!-- Alert banner -->
       <div id="signup-alert" class="alert d-none" role="alert"></div>
 
-      <!-- Full Name -->
-      <div class="mb-3">
-        <label for="signup-name" class="form-label fw-semibold">Full Name</label>
-        <input type="text" class="form-control form-control-lg" id="signup-name"
-               placeholder="Jane Doe" oninput="clearFieldError(this)" />
-        <div class="form-text text-danger mt-1 d-none" id="signup-name-msg"></div>
-      </div>
+      <form method="POST" action="{{ url_for('signup') }}" id="signup-form" novalidate>
+        <!-- CSRF token (uncomment when Flask-WTF is set up) -->
+        <!-- {{ form.hidden_tag() }} -->
 
-      <!-- Email -->
-      <div class="mb-3">
-        <label for="signup-email" class="form-label fw-semibold">Student Email</label>
-        <input type="email" class="form-control form-control-lg" id="signup-email"
-               placeholder="you@university.edu" oninput="clearFieldError(this)" />
-        <div class="form-text text-danger mt-1 d-none" id="signup-email-msg"></div>
-      </div>
-
-      <!-- Password -->
-      <div class="mb-3">
-        <label for="signup-password" class="form-label fw-semibold">Password</label>
-        <input type="password" class="form-control form-control-lg" id="signup-password"
-               placeholder="Min 8 characters" oninput="onPasswordInput(this)" />
-        <div class="form-text text-danger mt-1 d-none" id="signup-password-msg"></div>
-        <!-- Password Strength Bar -->
-        <div class="strength-bar-wrap mt-2" id="strength-wrap">
-          <div class="strength-track">
-            <div class="strength-fill" id="strength-fill"></div>
-          </div>
-          <div class="strength-label text-muted" id="strength-label"></div>
+        <!-- Full Name -->
+        <div class="mb-3">
+          <label for="signup-name" class="form-label">Full Name</label>
+          <input type="text" class="form-control" id="signup-name" name="name"
+                 placeholder="Jane Doe" required />
+          <div class="invalid-feedback">Name is required.</div>
         </div>
-      </div>
 
-      <!-- Confirm Password -->
-      <div class="mb-4">
-        <label for="signup-confirm" class="form-label fw-semibold">Confirm Password</label>
-        <input type="password" class="form-control form-control-lg" id="signup-confirm"
-               placeholder="Re-enter your password" oninput="clearFieldError(this)" />
-        <div class="form-text text-danger mt-1 d-none" id="signup-confirm-msg"></div>
-      </div>
+        <!-- Email -->
+        <div class="mb-3">
+          <label for="signup-email" class="form-label">Student Email</label>
+          <input type="email" class="form-control" id="signup-email" name="email"
+                 placeholder="you@university.edu" required />
+          <div class="invalid-feedback">Please enter a valid email address.</div>
+        </div>
 
-      <button class="btn btn-primary w-100 py-2" style="font-size:1rem;" onclick="doSignup()">
-        <i class="bi bi-person-plus me-2"></i>Sign Up
-      </button>
+        <!-- Password -->
+        <div class="mb-3">
+          <label for="signup-password" class="form-label">Password</label>
+          <input type="password" class="form-control" id="signup-password" name="password"
+                 placeholder="Min 8 characters" minlength="8" required
+                 oninput="updateStrength(this.value)" />
+          <div class="invalid-feedback">Password must be at least 8 characters.</div>
+          <!-- Password Strength Bar -->
+          <div class="strength-bar-wrap mt-2" id="strength-wrap">
+            <div class="strength-track">
+              <div class="strength-fill" id="strength-fill"></div>
+            </div>
+            <div class="strength-label text-muted" id="strength-label"></div>
+          </div>
+        </div>
 
-      <p class="text-center text-muted mt-3 mb-0" style="font-size:0.9rem;">
-        Already have an account? <a href="login.html" style="color:var(--navy);font-weight:600;">Log in</a>
+        <!-- Confirm Password -->
+        <div class="mb-3">
+          <label for="signup-confirm" class="form-label">Confirm Password</label>
+          <input type="password" class="form-control" id="signup-confirm" name="confirm"
+                 placeholder="Re-enter your password" required />
+          <div class="invalid-feedback" id="confirm-feedback">Please confirm your password.</div>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 mt-1"
+                style="border-radius:12px; font-weight:600;">Sign Up</button>
+      </form>
+
+      <p class="text-center text-muted small mt-3 mb-0">
+        Already have an account? <a href="{{ url_for('login') }}">Log in</a>
       </p>
     </div>
-  </main>
+  </div>
+</div>
+{% endblock %}
 
-  <!-- FOOTER -->
-  <footer class="sb-footer">
-    <div class="container">
-      <div class="row align-items-center">
-        <div class="col-md-4 mb-3 mb-md-0"><span class="brand">📚 Study Buddy</span><div class="mt-1">Find your perfect study partner at UWA.</div></div>
-        <div class="col-md-4 text-md-center mb-3 mb-md-0">
-          <div class="d-flex gap-3 justify-content-md-center">
-            <a href="browse_users.html">Browse</a>
-            <a href="study_sessions.html">Sessions</a>
-            <a href="profile.html">Profile</a>
-          </div>
-        </div>
-        <div class="col-md-4 text-md-end">CITS3403 Group Project © 2025</div>
-      </div>
-    </div>
-  </footer>
+{% block extra_js %}
+<script>
+  // Password strength
+  const strengthLabels = ['Very weak', 'Weak', 'Fair', 'Strong', 'Very strong'];
+  const strengthColors = ['#dc2626', '#f97316', '#eab308', '#22c55e', '#16a34a'];
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    // ── Password Strength ───────────────────────────────
-    const strengthLabels = ['Very weak', 'Weak', 'Fair', 'Strong', 'Very strong'];
-    const strengthColors = ['#dc2626', '#f97316', '#eab308', '#22c55e', '#16a34a'];
+  function getStrength(pw) {
+    let s = 0;
+    if (pw.length >= 8)          s++;
+    if (pw.length >= 12)         s++;
+    if (/[A-Z]/.test(pw))        s++;
+    if (/[0-9]/.test(pw))        s++;
+    if (/[^A-Za-z0-9]/.test(pw)) s++;
+    return s;
+  }
 
-    function getStrength(pw) {
-      let score = 0;
-      if (pw.length >= 8)          score++;
-      if (pw.length >= 12)         score++;
-      if (/[A-Z]/.test(pw))        score++;
-      if (/[0-9]/.test(pw))        score++;
-      if (/[^A-Za-z0-9]/.test(pw)) score++;
-      return score;
+  function updateStrength(pw) {
+    const wrap = document.getElementById('strength-wrap');
+    if (!pw) { wrap.classList.remove('visible'); return; }
+    wrap.classList.add('visible');
+    const score = Math.max(0, getStrength(pw) - 1);
+    document.getElementById('strength-fill').style.width = ((score + 1) / 5 * 100) + '%';
+    document.getElementById('strength-fill').style.background = strengthColors[score];
+    document.getElementById('strength-label').textContent = strengthLabels[score];
+  }
+
+  // Form validation
+  document.getElementById('signup-form').addEventListener('submit', function(e) {
+    const form = this;
+    const pw = document.getElementById('signup-password').value;
+    const confirm = document.getElementById('signup-confirm');
+
+    if (pw !== confirm.value) {
+      confirm.setCustomValidity('Passwords do not match');
+      document.getElementById('confirm-feedback').textContent = 'Passwords do not match.';
+    } else {
+      confirm.setCustomValidity('');
+      document.getElementById('confirm-feedback').textContent = 'Please confirm your password.';
     }
 
-    function onPasswordInput(el) {
-      clearFieldError(el);
-      const pw   = el.value;
-      const wrap = document.getElementById('strength-wrap');
-      if (!pw) { wrap.classList.remove('visible'); return; }
-      wrap.classList.add('visible');
-      const score = Math.max(0, getStrength(pw) - 1);
-      document.getElementById('strength-fill').style.width      = ((score + 1) / 5 * 100) + '%';
-      document.getElementById('strength-fill').style.background = strengthColors[score];
-      document.getElementById('strength-label').textContent     = strengthLabels[score];
+    if (!form.checkValidity()) {
+      e.preventDefault();
+      e.stopPropagation();
     }
+    form.classList.add('was-validated');
+  });
 
-    // ── Signup ──────────────────────────────────────────
-    function doSignup() {
-      clearAlert('signup-alert');
-      const nameEl    = document.getElementById('signup-name');
-      const emailEl   = document.getElementById('signup-email');
-      const passEl    = document.getElementById('signup-password');
-      const confirmEl = document.getElementById('signup-confirm');
-      let ok = true;
-
-      if (!nameEl.value.trim()) {
-        setFieldError(nameEl, 'signup-name-msg', 'Name is required');
-        ok = false;
-      } else { setFieldOk(nameEl, 'signup-name-msg'); }
-
-      if (!emailEl.value.trim()) {
-        setFieldError(emailEl, 'signup-email-msg', 'Email is required');
-        ok = false;
-      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailEl.value)) {
-        setFieldError(emailEl, 'signup-email-msg', 'Enter a valid email address');
-        ok = false;
-      } else { setFieldOk(emailEl, 'signup-email-msg'); }
-
-      if (!passEl.value) {
-        setFieldError(passEl, 'signup-password-msg', 'Password is required');
-        ok = false;
-      } else if (passEl.value.length < 8) {
-        setFieldError(passEl, 'signup-password-msg', 'Must be at least 8 characters');
-        ok = false;
-      } else { setFieldOk(passEl, 'signup-password-msg'); }
-
-      if (!confirmEl.value) {
-        setFieldError(confirmEl, 'signup-confirm-msg', 'Please confirm your password');
-        ok = false;
-      } else if (confirmEl.value !== passEl.value) {
-        setFieldError(confirmEl, 'signup-confirm-msg', 'Passwords do not match');
-        ok = false;
-      } else { setFieldOk(confirmEl, 'signup-confirm-msg'); }
-
-      if (!ok) return;
-
-      // TODO: replace with real backend registration
-      showAlert('signup-alert', 'success', '✅ Account created! Redirecting to login...');
-      setTimeout(() => {
-        window.location.href = 'login.html';
-      }, 1200);
-    }
-
-    // ── Shared helpers ──────────────────────────────────
-    function showAlert(id, type, msg) {
-      const el = document.getElementById(id);
-      el.className = 'alert alert-' + type;
-      el.textContent = msg;
-    }
-
-    function clearAlert(id) {
-      const el = document.getElementById(id);
-      el.className = 'alert d-none';
-      el.textContent = '';
-    }
-
-    function setFieldError(inputEl, msgId, msg) {
-      inputEl.classList.remove('is-valid');
-      inputEl.classList.add('is-invalid');
-      const m = document.getElementById(msgId);
-      m.className = 'form-text text-danger mt-1';
-      m.textContent = '⚠ ' + msg;
-    }
-
-    function setFieldOk(inputEl, msgId) {
-      inputEl.classList.remove('is-invalid');
-      inputEl.classList.add('is-valid');
-      const m = document.getElementById(msgId);
-      m.className = 'form-text text-success mt-1';
-      m.textContent = '✓ Looks good';
-    }
-
-    function clearFieldError(inputEl) {
-      inputEl.classList.remove('is-invalid', 'is-valid');
-      const msgEl = inputEl.parentElement.querySelector('.form-text');
-      if (msgEl) {
-        msgEl.className = 'form-text text-danger mt-1 d-none';
-        msgEl.textContent = '';
-      }
-    }
-  </script>
-
-</body>
-</html>
+  document.getElementById('signup-confirm').addEventListener('input', function() {
+    this.setCustomValidity('');
+  });
+</script>
+{% endblock %}
