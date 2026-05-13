@@ -126,6 +126,7 @@ def join_session(session_id):
         db.session.commit()
         flash('Successfully joined the session!', 'success')
     return redirect(url_for('main.sessions'))
+
 @main.route('/sessions/<int:session_id>/leave', methods=['POST'])
 @login_required
 def leave_session(session_id):
@@ -139,6 +140,7 @@ def leave_session(session_id):
         flash('You have left the session.', 'success')
 
     return redirect(url_for('main.sessions'))
+
 @main.route('/sessions/<int:session_id>/edit', methods=['GET', 'POST'])
 @login_required
 def edit_session(session_id):
@@ -265,3 +267,21 @@ def conversation(user_id):
         ((Message.sender_id == user_id) & (Message.receiver_id == current_user.id))
     ).order_by(Message.timestamp).all()
     return render_template('conversation.html', other_user=other_user, messages=msgs)
+
+
+
+
+
+@main.route('/notifications')
+@login_required
+def notifications():
+
+    incoming_requests = BuddyRequest.query.filter_by(
+        receiver_id=current_user.id,
+        status='pending'
+    ).all()
+
+    return render_template(
+        'notifications.html',
+        incoming_requests=incoming_requests
+    )

@@ -36,40 +36,20 @@
     <form method="POST" action="{{ url_for('main.conversation', user_id=other_user.id) }}" id="msgForm">
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
       <div class="d-flex gap-2">
-        <div class="flex-grow-1">
-          <input type="text" name="content" class="form-control form-control-lg"
-                 id="msgInput" placeholder="Type a message..." required autofocus maxlength="500"/>
-          <div class="d-flex justify-content-end mt-1">
-            <span id="charCount" style="font-size:0.75rem;color:#6b7280;">0/500</span>
-          </div>
-        </div>
-        <button type="submit" class="btn btn-primary px-4" style="height:fit-content;">
+        <input type="text" name="content" class="form-control form-control-lg"
+               placeholder="Type a message..." required autofocus/>
+        <button type="submit" class="btn btn-primary px-4">
           <i class="bi bi-send-fill"></i>
         </button>
       </div>
     </form>
   </div>
 </div>
-{% endblock %}
 
 {% block extra_js %}
 <script>
   const chatBox = document.getElementById('chat-box');
   chatBox.scrollTop = chatBox.scrollHeight;
-
-  const msgInput = document.getElementById('msgInput');
-  const charCount = document.getElementById('charCount');
-
-  msgInput.addEventListener('input', function() {
-    const count = msgInput.value.length;
-    charCount.textContent = count + '/500';
-    if (count >= 450) {
-      charCount.style.color = 'red';
-    } else if (count >= 350) {
-      charCount.style.color = 'orange';
-    } else {
-      charCount.style.color = '#6b7280';
-    }
-  });
 </script>
+{% endblock %}
 {% endblock %}
