@@ -33,7 +33,6 @@ def signup():
         if password != confirm:
             flash('Passwords do not match.', 'danger')
             return redirect(url_for('auth.signup'))
-
         if User.query.filter_by(email=email).first():
             flash('Email already registered.', 'danger')
             return redirect(url_for('auth.signup'))
@@ -42,11 +41,8 @@ def signup():
         db.session.add(user)
         db.session.commit()
         login_user(user)
-
-        flash('Account created successfully!', 'success')
-
+        flash('Account created! Welcome to Study Buddy!', 'success')
         return redirect(url_for('main.browse'))
-        
     return render_template('signup.html')
 
 @auth.route('/logout')

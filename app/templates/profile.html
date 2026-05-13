@@ -17,10 +17,10 @@
       </div>
       <div class="d-flex gap-2">
         <form action="{{ url_for('main.accept_request', request_id=req.id) }}" method="POST">
-          <button type="submit" class="btn btn-success btn-sm px-3">Accept</button>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">          <button type="submit" class="btn btn-success btn-sm px-3">Accept</button>
         </form>
         <form action="{{ url_for('main.decline_request', request_id=req.id) }}" method="POST">
-          <button type="submit" class="btn btn-outline-danger btn-sm px-3">Decline</button>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">          <button type="submit" class="btn btn-outline-danger btn-sm px-3">Decline</button>
         </form>
       </div>
     </div>

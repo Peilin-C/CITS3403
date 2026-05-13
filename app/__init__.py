@@ -1,12 +1,15 @@
 from flask import Flask
+from datetime import timedelta
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from flask_wtf.csrf import CSRFProtect
 from config import Config
 
 db = SQLAlchemy()
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
 login_manager.login_message_category = 'danger'
+csrf = CSRFProtect()
 
 def create_app():
     app = Flask(__name__)
@@ -14,6 +17,7 @@ def create_app():
 
     db.init_app(app)
     login_manager.init_app(app)
+    csrf.init_app(app)
 
     from app.routes import main
     from app.auth import auth
@@ -36,7 +40,7 @@ def create_app():
                 receiver_id=current_user.id,
                 is_read=False
             ).count()
-            return {'pending_requests': pending, 'unread_messages': unread}
-        return {'pending_requests': 0, 'unread_messages': 0}
+            return {'pending_requests': pending, 'unread_messages': unread, 'timedelta': timedelta}
+        return {'pending_requests': 0, 'unread_messages': 0, 'timedelta': timedelta}
 
     return app

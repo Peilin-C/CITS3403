@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
 from app.models import User, StudySession, BuddyRequest, Message
 from app import db
+from datetime import datetime
 
 main = Blueprint('main', __name__)
 
@@ -229,6 +230,15 @@ def messages():
         status='accepted'
     ).all()
     buddies = [r.receiver for r in accepted_sent] + [r.sender for r in accepted_received]
+    
+    def last_message_time(buddy):
+        last_msg = Message.query.filter(
+            ((Message.sender_id == current_user.id) & (Message.receiver_id == buddy.id)) |
+            ((Message.sender_id == buddy.id) & (Message.receiver_id == current_user.id))
+        ).order_by(Message.timestamp.desc()).first()
+        return last_msg.timestamp if last_msg else None
+
+    buddies.sort(key=lambda b: last_message_time(b) or datetime.min, reverse=True)
     return render_template('messages.html', buddies=buddies)
 
 @main.route('/messages/<int:user_id>', methods=['GET', 'POST'])
