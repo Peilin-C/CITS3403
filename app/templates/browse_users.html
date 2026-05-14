@@ -52,8 +52,14 @@
           <p><i class="bi bi-book me-2 text-primary"></i><strong>Units:</strong> {{ user.units or 'Not specified' }}</p>
           <p><i class="bi bi-clock me-2 text-primary"></i><strong>Availability:</strong> {{ user.availability or 'Not specified' }}</p>
           <p><i class="bi bi-people me-2 text-primary"></i><strong>Style:</strong> {{ user.study_style or 'Not specified' }}</p>
-          <a href="{{ url_for('main.profile') }}" class="btn btn-primary w-100 mb-2 mt-3">View Profile</a>
-          <button class="btn btn-outline-primary w-100">Send Request</button>
+          <a href="{{ url_for('main.view_profile', user_id=user.id) }}" class="btn btn-primary w-100 mb-2 mt-3">View Profile</a>
+          {% if user.id in sent_requests %}
+            <button class="btn btn-secondary w-100" disabled>Request Sent</button>
+          {% else %}
+            <form action="{{ url_for('main.send_request', user_id=user.id) }}" method="POST">
+              <button type="submit" class="btn btn-outline-primary w-100">Send Request</button>
+            </form>
+          {% endif %}
         </div>
       </div>
       {% endfor %}

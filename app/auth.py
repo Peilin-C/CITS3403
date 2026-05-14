@@ -27,7 +27,13 @@ def signup():
     if request.method == 'POST':
         name = request.form.get('name')
         email = request.form.get('email')
+
         password = request.form.get('password')
+        confirm = request.form.get('confirm')
+        if password != confirm:
+            flash('Passwords do not match.', 'danger')
+            return redirect(url_for('auth.signup'))
+
         if User.query.filter_by(email=email).first():
             flash('Email already registered.', 'danger')
             return redirect(url_for('auth.signup'))
@@ -35,8 +41,12 @@ def signup():
         user.set_password(password)
         db.session.add(user)
         db.session.commit()
-        flash('Account created! Please log in.', 'success')
-        return redirect(url_for('auth.login'))
+        login_user(user)
+
+        flash('Account created successfully!', 'success')
+
+        return redirect(url_for('main.browse'))
+
     return render_template('signup.html')
 
 @auth.route('/logout')
