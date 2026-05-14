@@ -5,6 +5,17 @@ from app import db
 
 main = Blueprint('main', __name__)
 
+### this is for the finish setting up user profile notification. 
+def profile_incomplete(user):
+    required_fields = [
+        user.degree,
+        user.units,
+        user.availability,
+        user.study_style
+    ]
+
+    return not all(required_fields)
+
 @main.route('/')
 def home():
     return render_template('index.html')
@@ -24,7 +35,10 @@ def browse():
         users = users.filter(User.study_style.contains(study_style))
     users = users.all()
     sent_requests = [r.receiver_id for r in current_user.sent_requests]
-    return render_template('browse_users.html', users=users, sent_requests=sent_requests)
+    return render_template('browse_users.html', users=users, 
+                                                sent_requests=sent_requests, 
+                                                profile_needs_setup = profile_incomplete(current_user))
+    
 
 @main.route('/profile')
 @login_required
@@ -33,8 +47,8 @@ def profile():
         receiver_id=current_user.id,
         status='pending'
     ).all()
-    return render_template('profile.html', user=current_user,
-                          incoming_requests=incoming_requests)
+    return render_template('profile.html', user=current_user, incoming_requests=incoming_requests, profile_needs_setup = profile_incomplete(current_user))
+    
 
 
 
@@ -90,7 +104,8 @@ def edit_profile():
 @login_required
 def sessions():
     all_sessions = StudySession.query.all()
-    return render_template('study_sessions.html', sessions=all_sessions)
+    return render_template('study_sessions.html', sessions=all_sessions, 
+                                                profile_needs_setup = profile_incomplete(current_user))
 
 @main.route('/create_session', methods=['GET', 'POST'])
 @login_required
@@ -272,6 +287,7 @@ def notifications():
     ).all()
 
     return render_template(
-        'notifications.html',
-        incoming_requests=incoming_requests
+    'notifications.html',
+    incoming_requests=incoming_requests,
+    needs_profile_setup=profile_incomplete(current_user)
     )
