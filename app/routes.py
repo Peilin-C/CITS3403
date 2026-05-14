@@ -193,7 +193,7 @@ def accept_request(request_id):
     req.status = 'accepted'
     db.session.commit()
     flash('Buddy request accepted!', 'success')
-    return redirect(url_for('main.profile'))
+    return redirect(url_for('main.notifications'))
 
 @main.route('/decline_request/<int:request_id>', methods=['POST'])
 @login_required
@@ -202,7 +202,7 @@ def decline_request(request_id):
     req.status = 'declined'
     db.session.commit()
     flash('Buddy request declined.', 'info')
-    return redirect(url_for('main.profile'))
+    return redirect(url_for('main.notifications'))
 
 @main.route('/buddies')
 @login_required
