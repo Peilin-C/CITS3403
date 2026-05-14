@@ -13,7 +13,7 @@ Users can create a profile with their units, availability, and study preferences
 * Bhavya Narula 24253549 Bhavya-narula
 * Fatima Sher 23997337 fatimasher0
 * Peilin Cai 24389729 Peilin-C
-* Saffron Coupland 25017991 
+* Saffron Coupland 25017991 SAFFRONCode24/saffron-source
 
 ---
 
