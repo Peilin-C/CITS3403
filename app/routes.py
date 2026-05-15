@@ -12,10 +12,13 @@ def profile_incomplete(user):
         user.degree,
         user.units,
         user.availability,
-        user.study_style
+        user.study_style,
+        user.study_preferences
     ]
 
     return not all(required_fields)
+
+###
 
 @main.route('/')
 def home():
