@@ -39,16 +39,8 @@ class SessionButtonTests(unittest.TestCase):
         cls.driver.find_element(By.NAME, 'email').send_keys(cls.test_email)
         cls.driver.find_element(By.NAME, 'password').send_keys('TestPass123')
         cls.driver.find_element(By.NAME, 'confirm').send_keys('TestPass123')
-        cls.driver.execute_script("document.querySelector('form').submit();")
-        time.sleep(2)
-
-        # Login
-        cls.driver.get(f'{BASE_URL}/login')
-        time.sleep(1)
-        cls.driver.find_element(By.NAME, 'email').send_keys(cls.test_email)
-        cls.driver.find_element(By.NAME, 'password').send_keys('TestPass123')
-        cls.driver.execute_script("document.querySelector('form').submit();")
-        time.sleep(2)
+        cls.driver.find_element(By.CSS_SELECTOR, 'button[type="submit"]').click()
+        time.sleep(3)
 
     @classmethod
     def tearDownClass(cls):

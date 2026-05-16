@@ -1,41 +1,45 @@
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
+import unittest
 import time
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
 
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+BASE_URL = 'http://127.0.0.1:5000'
 
-# Homepage test
-driver.get("http://127.0.0.1:5000")
-time.sleep(2)
+class NavigationTests(unittest.TestCase):
 
-assert "Study" in driver.page_source
-print("Homepage test passed")
+    def setUp(self):
+        chrome_options = Options()
+        chrome_options.add_argument('--headless')
+        chrome_options.add_argument('--no-sandbox')
+        chrome_options.add_argument('--disable-dev-shm-usage')
+        chrome_options.add_argument('--window-size=1920,1080')
+        self.driver = webdriver.Chrome(options=chrome_options)
+        self.driver.implicitly_wait(5)
 
+    def tearDown(self):
+        self.driver.quit()
 
-# Login page test
-driver.get("http://127.0.0.1:5000/login")
-time.sleep(2)
+    def test_homepage_loads(self):
+        self.driver.get(BASE_URL)
+        time.sleep(2)
+        self.assertIn('Study', self.driver.page_source)
 
-assert "login" in driver.page_source.lower()
-print("Login page test passed")
+    def test_login_page_loads(self):
+        self.driver.get(f'{BASE_URL}/login')
+        time.sleep(2)
+        self.assertIn('login', self.driver.page_source.lower())
 
+    def test_signup_page_loads(self):
+        self.driver.get(f'{BASE_URL}/signup')
+        time.sleep(2)
+        body = self.driver.page_source.lower()
+        self.assertTrue('sign up' in body or 'signup' in body or 'create' in body)
 
-# Signup page test
-driver.get("http://127.0.0.1:5000/signup")
-time.sleep(2)
+    def test_browse_redirects_to_login_when_not_logged_in(self):
+        self.driver.get(f'{BASE_URL}/browse')
+        time.sleep(2)
+        self.assertIn('login', self.driver.current_url.lower())
 
-assert "signup" in driver.page_source.lower() or "sign up" in driver.page_source.lower()
-print("Signup page test passed")
-
-
-# Browse page test
-driver.get("http://127.0.0.1:5000/browse")
-time.sleep(2)
-
-print("Browse page test passed")
-
-
-driver.quit()
-
-print("All navigation tests passed")
+if __name__ == '__main__':
+    unittest.main()

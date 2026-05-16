@@ -24,6 +24,7 @@ def profile_incomplete(user):
 def home():
     return render_template('index.html')
 
+
 @main.route('/browse')
 @login_required
 def browse():
@@ -39,10 +40,15 @@ def browse():
         users = users.filter(User.study_style.contains(study_style))
     users = users.all()
     sent_requests = [r.receiver_id for r in current_user.sent_requests]
-    return render_template('browse_users.html', users=users, 
-                                                sent_requests=sent_requests, 
-                                                profile_needs_setup = profile_incomplete(current_user))
-    
+    accepted_sent = [r.receiver_id for r in BuddyRequest.query.filter_by(
+        sender_id=current_user.id, status='accepted').all()]
+    accepted_received = [r.sender_id for r in BuddyRequest.query.filter_by(
+        receiver_id=current_user.id, status='accepted').all()]
+    buddies = accepted_sent + accepted_received
+    return render_template('browse_users.html', users=users,
+                          sent_requests=sent_requests,
+                          buddies=buddies,
+                          profile_needs_setup=profile_incomplete(current_user))
 
 @main.route('/profile')
 @login_required
