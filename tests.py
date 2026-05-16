@@ -1,6 +1,6 @@
 import unittest
 from app import create_app, db
-from app.models import User
+from app.models import User, StudySession
 
 class TestStudyBuddy(unittest.TestCase):
 
@@ -57,7 +57,8 @@ class TestStudyBuddy(unittest.TestCase):
             'email': 'wrong@uwa.edu.au',
             'password': 'Password123',
             'confirm': 'Password123'
-        })
+        }, follow_redirects=True)
+        self.client.get('/logout', follow_redirects=True)
         response = self.client.post('/login', data={
             'email': 'wrong@uwa.edu.au',
             'password': 'WrongPassword'
@@ -89,6 +90,64 @@ class TestStudyBuddy(unittest.TestCase):
             self.assertEqual(saved.units, 'CITS3403')
             self.assertEqual(saved.study_style, 'Group study')
             self.assertTrue(saved.open_to_teams)
+
+    def test_create_session_saves_to_db(self):
+        self.client.post('/signup', data={
+            'name': 'Test User',
+            'email': 'session@uwa.edu.au',
+            'password': 'Password123',
+            'confirm': 'Password123'
+        }, follow_redirects=True)
+        self.client.post('/create_session', data={
+            'name': 'CITS3403 Study',
+            'unit': 'CITS3403',
+            'date': '2026-06-01',
+            'time': '14:00',
+            'location': 'Library',
+            'mode': 'In Person',
+            'max_participants': '6'
+        }, follow_redirects=True)
+        with self.app.app_context():
+            session = StudySession.query.filter_by(unit='CITS3403').first()
+            self.assertIsNotNone(session)
+            self.assertEqual(session.title, 'CITS3403 Study')
+
+    def test_edit_profile_updates_db(self):
+        self.client.post('/signup', data={
+            'name': 'Test User',
+            'email': 'edit@uwa.edu.au',
+            'password': 'Password123',
+            'confirm': 'Password123'
+        }, follow_redirects=True)
+        self.client.post('/edit_profile', data={
+            'name': 'Updated Name',
+            'degree': 'Computer Science',
+            'units': 'CITS3403',
+            'availability': 'Mornings',
+            'study_style': 'Group study',
+            'study_preferences': 'Library',
+            'open_to_teams': 'yes'
+        }, follow_redirects=True)
+        with self.app.app_context():
+            user = User.query.filter_by(email='edit@uwa.edu.au').first()
+            self.assertEqual(user.units, 'CITS3403')
+            self.assertEqual(user.study_style, 'Group study')
+
+    def test_duplicate_email_rejected(self):
+        self.client.post('/signup', data={
+            'name': 'Test User',
+            'email': 'duplicate@uwa.edu.au',
+            'password': 'Password123',
+            'confirm': 'Password123'
+        }, follow_redirects=True)
+        self.client.get('/logout', follow_redirects=True)
+        response = self.client.post('/signup', data={
+            'name': 'Another User',
+            'email': 'duplicate@uwa.edu.au',
+            'password': 'Password123',
+            'confirm': 'Password123'
+        }, follow_redirects=True)
+        self.assertIn(b'already registered', response.data)
 
 if __name__ == '__main__':
     unittest.main()
