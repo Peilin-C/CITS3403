@@ -24,7 +24,7 @@ Study Buddy Finder helps UWA students connect with each other based on shared un
 | 24253549 | Bhavya Narula | Bhavya-narula |
 | 23997337 | Fatima Sher | fatimasher0 |
 | 24389729 | Peilin Cai | Peilin-C |
-| 25017991 | Saffron Coupland | SAFFRONCode24 |
+| 25017991 | Saffron Coupland | SAFFRONCode24, saffron-source |
 
 ## How to Launch
 
