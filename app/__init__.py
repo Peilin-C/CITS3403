@@ -32,6 +32,7 @@ def create_app():
         from flask_login import current_user
         if current_user.is_authenticated:
             from app.models import BuddyRequest, Message
+            from app.routes import profile_incomplete
             pending = BuddyRequest.query.filter_by(
                 receiver_id=current_user.id,
                 status='pending'
@@ -40,7 +41,17 @@ def create_app():
                 receiver_id=current_user.id,
                 is_read=False
             ).count()
-            return {'pending_requests': pending, 'unread_messages': unread, 'timedelta': timedelta}
-        return {'pending_requests': 0, 'unread_messages': 0, 'timedelta': timedelta}
+            return {
+                'pending_requests': pending,
+                'unread_messages': unread,
+                'timedelta': timedelta,
+                'profile_needs_setup': profile_incomplete(current_user)
+            }
+        return {
+            'pending_requests': 0,
+            'unread_messages': 0,
+            'timedelta': timedelta,
+            'profile_needs_setup': False
+        }
 
     return app

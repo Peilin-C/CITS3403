@@ -77,6 +77,15 @@
         {% endfor %}
       {% endif %}
     {% endwith %}
+    
+    {% if current_user.is_authenticated and profile_needs_setup %}
+<div class="alert alert-warning alert-dismissible fade show mt-2" role="alert">
+  <i class="bi bi-person-exclamation me-2"></i>
+  <strong>Complete your profile!</strong> Add your units, availability and study style so other students can find you.
+  <a href="{{ url_for('main.edit_profile') }}" class="alert-link ms-2">Set up now →</a>
+  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+{% endif %}
   </div>
 
   <main class="flex-grow-1">
